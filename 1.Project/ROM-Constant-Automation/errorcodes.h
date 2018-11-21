@@ -1,0 +1,14 @@
+#ifndef ERRORCODES_H
+#define ERRORCODES_H
+
+typedef enum
+{
+    ERR_UNABLE_TO_LOAD_JLR_XML = 0,
+    ERR_UNABLE_TO_READ_JLR_XML,
+    ERR_XML_PARSING_FAILED
+
+}ERROR_CODES_T;
+
+
+
+#endif // ERRORCODES_H

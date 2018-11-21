@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root>
+	<Book>
+		<Type>
+			<Fiction>
+				<Fiction_1>
+				FICT1
+				</Fiction_1>
+				<Fiction_2>
+				FICT2
+				</Fiction_2>
+				<Fiction_3>
+				FICT3
+				</Fiction_3>
+			</Fiction>
+			<Novel>
+				<Novel_1>
+				NOV1
+				</Novel_1>
+				<Novel_2>
+				NOV2
+				</Novel_2>
+				<Novel_3>
+				NOV3
+				</Novel_3>
+			</Novel>
+			<Story>
+				<Story_1>
+				STORY1
+				</Story_1>
+				<Story_2>
+				STORY2
+				</Story_2>
+				<Story_3>
+				STORY3
+				</Story_3>
+			</Story>
+		</Type>
+
+	</Book>
+</Root>
