@@ -31,7 +31,8 @@ SOURCES += \
 HEADERS += \
         mainwindow.h \
     errorcodes.h \
-    jlrxmlparser.h
+    jlrxmlparser.h \
+    xmldatatype.h
 
 FORMS += \
         mainwindow.ui

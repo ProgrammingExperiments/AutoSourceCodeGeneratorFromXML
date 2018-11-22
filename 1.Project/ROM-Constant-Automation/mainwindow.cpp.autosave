@@ -58,7 +58,7 @@ void MainWindow::on_ImportXml_pushButton_clicked()
         ui->ImportXml_lineEdit->setText(jlrXmlFileStr);
 
         /* Initialize the xml parser object */
-        JlrXmlParser xmlParser;
+        JlrXmlParser xmlParser();
 
         if (!xmlParser.read(&jlrXmlFileObj))
         {
