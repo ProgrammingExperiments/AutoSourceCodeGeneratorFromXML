@@ -15,14 +15,12 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void UpdateSelectVariantComboBox(QString const& variantData);
 
 private slots:
     void on_ImportXml_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
-    QStatusBar* status;
 };
 
 #endif // MAINWINDOW_H

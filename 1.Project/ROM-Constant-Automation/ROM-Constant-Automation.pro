@@ -32,7 +32,8 @@ HEADERS += \
         mainwindow.h \
     errorcodes.h \
     jlrxmlparser.h \
-    xmldatatype.h
+    romdatatypes.h \
+    typedefine.h
 
 FORMS += \
         mainwindow.ui

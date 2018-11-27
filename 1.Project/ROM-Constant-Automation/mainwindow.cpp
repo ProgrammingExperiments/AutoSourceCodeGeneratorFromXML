@@ -15,18 +15,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    /* Add elements to the variant selection combo box */
-//    ui->SelectVariant_comboBox->addItem("All");
-//    ui->SelectVariant_comboBox->addItem("L560");
-//    ui->SelectVariant_comboBox->addItem("L405");
-//    ui->SelectVariant_comboBox->addItem("L462");
-//    ui->SelectVariant_comboBox->addItem("L494");
-//    ui->SelectVariant_comboBox->addItem("X590");
-//    ui->SelectVariant_comboBox->addItem("X761");
-//    ui->SelectVariant_comboBox->addItem("L551");
-//    ui->SelectVariant_comboBox->addItem("L550");
-//    ui->SelectVariant_comboBox->addItem("X540");
-//    ui->SelectVariant_comboBox->addItem("L663");
+    /* Add elements to the variant selection combo box */
+    ui->SelectVariant_comboBox->addItem("All");
+    ui->SelectVariant_comboBox->addItem("L560");
+    ui->SelectVariant_comboBox->addItem("L405");
+    ui->SelectVariant_comboBox->addItem("L462");
+    ui->SelectVariant_comboBox->addItem("L494");
+    ui->SelectVariant_comboBox->addItem("X590");
+    ui->SelectVariant_comboBox->addItem("X761");
+    ui->SelectVariant_comboBox->addItem("L551");
+    ui->SelectVariant_comboBox->addItem("L550");
+    ui->SelectVariant_comboBox->addItem("X540");
+    ui->SelectVariant_comboBox->addItem("L663");
 }
 
 MainWindow::~MainWindow()
@@ -72,12 +72,5 @@ void MainWindow::on_ImportXml_pushButton_clicked()
             statusBar()->showMessage(tr("JLR XML file loaded"), 2000);
         }
     }
-}
-
-void MainWindow::UpdateSelectVariantComboBox(const QString &variantData)
-{
-    //ui->SelectVariant_comboBox->addItem();
-    QString test = "ABCD";
-    ui->SelectVariant_comboBox->addItem("test");
 }
 
