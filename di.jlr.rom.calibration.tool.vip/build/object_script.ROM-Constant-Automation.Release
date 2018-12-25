@@ -1,0 +1,16 @@
+INPUT(
+./release/cfg_generator.o
+./release/jlr_xml_parser.o
+./release/main_window.o
+./release/main.o
+./release/cfg_generator.o
+./release/jlr_xml_parser.o
+./release/main_window.o
+./release/main.o
+./release/cfg_generator.o
+./release/jlr_xml_parser.o
+./release/main_window.o
+./release/main.o
+./release/qrc_resource.o
+./release/moc_main_window.o
+);

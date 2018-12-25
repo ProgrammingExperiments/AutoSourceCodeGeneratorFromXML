@@ -1,0 +1,16 @@
+INPUT(
+./debug/cfg_generator.o
+./debug/jlr_xml_parser.o
+./debug/main_window.o
+./debug/main.o
+./debug/cfg_generator.o
+./debug/jlr_xml_parser.o
+./debug/main_window.o
+./debug/main.o
+./debug/cfg_generator.o
+./debug/jlr_xml_parser.o
+./debug/main_window.o
+./debug/main.o
+./debug/qrc_resource.o
+./debug/moc_main_window.o
+);
