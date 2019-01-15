@@ -902,6 +902,7 @@ ERROR_CODES_T JlrXmlParser::parseVipConstantTablesElements(QXmlStreamReader &xml
                 else if(false != isCurrentVariantPresentInVariantList(xml.name().toUtf8()))
                 {
                     /* The variant in table data is present in variant list */
+                    qDebug()<<"VARIANT - "<<xml.name();
                     updateVariantSpecificValueForVipConstTables(xml,xml.name().toUtf8(),&vipConstTable);
                 }
 //                else if(xml.name() == "Scaling")
@@ -1191,29 +1192,7 @@ ERROR_CODES_T JlrXmlParser::updateVariantSpecificValueForVipConstTables(QXmlStre
         {
             if(xml.tokenType() == QXmlStreamReader::StartElement)
             {
-                if(xml.name() != "")
-                {
-                    if(xml.name() == "Min")
-                    {
-                        //gipConstValue->scaling.minValue = xml.readElementText().toInt();
-                    }
-                    else if(xml.name() == "Max")
-                    {
-                        //gipConstValue->scaling.maxValue = xml.readElementText().toLong();
-                    }
-                    else if(xml.name() == "Resolution")
-                    {
-                        //gipConstValue->scaling.resolution = xml.readElementText().toFloat();
-                    }
-                    else if(xml.name() == "Units")
-                    {
-                        //gipConstValue->scaling.units = xml.readElementText();
-                    }
-                    else
-                    {
-
-                    }
-                }
+                qDebug()<<xml.name();
             }
             xml.readNext();
         }
