@@ -889,14 +889,16 @@ ERROR_CODES_T JlrXmlParser::parseVipConstantTablesElements(QXmlStreamReader &xml
                     vipConstTable.name = xml.name().toString();
                     qDebug()<<vipConstTable.name;
                 }
-//                else if(xml.name() == "Group")
-//                {
-//                    vipConstTable.group = xml.readElementText();
-//                }
-//                else if(xml.name() == "Length")
-//                {
-//                    vipConstTable.length = xml.readElementText().toShort();
-//                }
+                else if(xml.name() == "Group")
+                {
+                    vipConstTable.group = xml.readElementText();
+                    qDebug()<<vipConstTable.group;
+                }
+                else if(xml.name() == "Length")
+                {
+                    vipConstTable.length = xml.readElementText().toShort();
+                    qDebug()<<vipConstTable.length;
+                }
 //                else if(false != isCurrentVariantPresentInVariantList(xml.name().toUtf8()))
 //                {
 //                    /* The variant in table data is present in variant list */
