@@ -899,11 +899,11 @@ ERROR_CODES_T JlrXmlParser::parseVipConstantTablesElements(QXmlStreamReader &xml
                     vipConstTable.length = xml.readElementText().toShort();
                     qDebug()<<vipConstTable.length;
                 }
-//                else if(false != isCurrentVariantPresentInVariantList(xml.name().toUtf8()))
-//                {
-//                    /* The variant in table data is present in variant list */
-//                    updateVariantSpecificDataForVipConstTables(xml,&vipConstTable);
-//                }
+                else if(false != isCurrentVariantPresentInVariantList(xml.name().toUtf8()))
+                {
+                    /* The variant in table data is present in variant list */
+                    updateVariantSpecificValueForVipConstTables(xml,xml.name().toUtf8(),&vipConstTable);
+                }
 //                else if(xml.name() == "Scaling")
 //                {
 //                    //updateScalingFactorsGipConstValues(xml,&gipConstValue);
@@ -1173,24 +1173,25 @@ ERROR_CODES_T JlrXmlParser::updateScalingFactorsGipConstValues(QXmlStreamReader 
 
  Critical Section  : None
  *******************************************************************************/
-ERROR_CODES_T JlrXmlParser::updateVariantSpecificDataForVipConstTables(QXmlStreamReader &xml,\
-                                                 ROM_DATA_VIP_CONST_TABLES* vipConstTable)
+ERROR_CODES_T JlrXmlParser::updateVariantSpecificValueForVipConstTables(QXmlStreamReader &xml,\
+                                                                        QString const& variant,\
+                                                                        ROM_DATA_VIP_CONST_TABLES* vipConstTable)
 {
     ERROR_CODES_T errorCode = ERR_OK;
 
     /* We need a start element */
     if(xml.tokenType() != QXmlStreamReader::StartElement)
     {
-        errorCode = ERR_GIP_CONST_VALUES_XML_PARSING_FAILED;
+        errorCode = ERR_VIP_CONST_TABLES_XML_PARSING_FAILED;
     }
     else
     {
         while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
-                xml.name() == "Scaling") && !(xml.hasError()))
+                xml.name() == variant) && !(xml.hasError()))
         {
             if(xml.tokenType() == QXmlStreamReader::StartElement)
             {
-                if(xml.name() != "Scaling")
+                if(xml.name() != "")
                 {
                     if(xml.name() == "Min")
                     {

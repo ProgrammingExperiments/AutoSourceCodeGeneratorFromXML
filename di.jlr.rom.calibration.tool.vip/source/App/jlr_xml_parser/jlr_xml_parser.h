@@ -93,9 +93,10 @@ public:
     ERROR_CODES_T processVipConstantTablesTag(QXmlStreamReader &xml);
     ERROR_CODES_T parseVipConstantTablesElements(QXmlStreamReader& xml);
     bool isCurrentVariantPresentInVariantList(QString const& variant);
-    ERROR_CODES_T updateVariantSpecificDataForVipConstTables(QXmlStreamReader &xml,\
-                                                     ROM_DATA_VIP_CONST_TABLES*\
-                                                     vipConstTable);
+    ERROR_CODES_T updateVariantSpecificValueForVipConstTables(QXmlStreamReader &xml,\
+                                                              QString const& variant,\
+                                                              ROM_DATA_VIP_CONST_TABLES*\
+                                                              vipConstTable);
 
     void UpdateVariantInfo(QString const& variantData);
     void UpdateXmlVersion(const QString &xmlVersion);
