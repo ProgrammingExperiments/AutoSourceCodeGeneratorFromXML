@@ -39,6 +39,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QStringList>
+#include <math.h>
 
 /******************************************************************************
  *                          Application Specfic Include Files                 *
@@ -65,6 +66,25 @@ void CfgGenerator::setSelectedVariant(QString const& variant)
 }
 
 /*******************************************************************************
+ Function Name     : CfgGenerator::setSelectedVariant
+
+ Description       : Sets the selected variant.
+
+ Parameters        : QString const& variant
+
+ Return Value      : None
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T CfgGenerator::setupOutputDirectory(const QStringList &variantList)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    errorCode = createVariantSpecificFolders(variantList,selectedVariant);
+
+    return errorCode;
+}
+/*******************************************************************************
  Function Name     : CfgGenerator::createVariantSpecificFolders
 
  Description       : Creates the variant specific CFG folders
@@ -80,14 +100,13 @@ ERROR_CODES_T CfgGenerator::createVariantSpecificFolders(QStringList const&\
                                                          QString variantSelected)
 {
     ERROR_CODES_T errorCode = ERR_OK;
+    (void)variantList;
 
     if(selectedVariant != "All")
     {
         QDir cfgGenDir;
-        QFile cfgFile;
         QString cfgFolderPath = "../output/cfg_files/di.jlr.rom.const.";
-        QString CfgFileName = "cfg_rom_const_";
-        cfgFolderPath += selectedVariant.toLower()+"/";
+        cfgFolderPath += variantSelected.toLower()+"/";
 
         /* Generate CFG files for all types of constants */
         uint8_t index = 0;
@@ -100,6 +119,8 @@ ERROR_CODES_T CfgGenerator::createVariantSpecificFolders(QStringList const&\
             if(getRomConstParsedStatus(index)->parsedStatus == true)
             {
                 /* Set the cfg file name based on the ROM const data type */
+                QString CfgFileName = "cfg_rom_const_";
+                QFile cfgFile;
                 CfgFileName += getRomConstParsedStatus(index)->variantCfgFile;
                 cfgFile.setFileName(cfgFolderPath + CfgFileName);
 
@@ -147,84 +168,12 @@ ERROR_CODES_T CfgGenerator::createVariantSpecificFolders(QStringList const&\
             }
         }
     }
-    else
-    {
-        for(QStringList::const_iterator listIterator = variantList.begin();listIterator\
-            != variantList.end();++listIterator)
-        {
-            QDir cfgGenDir;
-            QFile cfgFile;
-            QString cfgFolderPath = "../output/cfg_files/di.jlr.rom.const.";
-            QString CfgFileName = "cfg_rom_const_";
-            QString variantIndex = *listIterator;
-            cfgFolderPath += variantIndex.toLower() +"/";
-
-            /* Generate CFG files for all types of constants */
-            uint8_t index = 0;
-
-            for(index = 0;index<MAX_ROM_CONST_TYPES;index++)
-            {
-                /* Check whether the parsing is completed for the particular
-                 * ROM data constant.
-                 */
-                if(getRomConstParsedStatus(index)->parsedStatus == true)
-                {
-                    /* Set the cfg file name based on the ROM const data type */
-                    CfgFileName += getRomConstParsedStatus(index)->variantCfgFile;
-                    cfgFile.setFileName(cfgFolderPath + CfgFileName);
-
-                    if(!cfgGenDir.exists(cfgFolderPath))
-                    {
-                        if(false != cfgGenDir.mkpath(cfgFolderPath))
-                        {
-                            if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text)))
-                            {
-                                errorCode = ERR_FAILED_TO_CREATE_VARIANT_CFG_TEMPLATE;
-                            }
-                            else
-                            {
-                                errorCode = updateTemplateTextToCfgFile(cfgFolderPath +\
-                                                                        CfgFileName);
-                            }
-                        }
-                        else
-                        {
-                            errorCode = ERR_FAILED_TO_CREATE_VARIANT_FOLDER;
-                        }
-                    }
-                    else
-                    {
-                        cfgGenDir.remove(cfgFolderPath + CfgFileName);
-                        cfgGenDir.rmdir(cfgFolderPath);
-
-                        if(false != cfgGenDir.mkpath(cfgFolderPath))
-                        {
-                            if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text)))
-                            {
-                                errorCode = ERR_FAILED_TO_CREATE_VARIANT_CFG_TEMPLATE;
-                            }
-                            else
-                            {
-                                errorCode = updateTemplateTextToCfgFile(cfgFolderPath +\
-                                                                        CfgFileName);
-                            }
-                        }
-                        else
-                        {
-                            errorCode = ERR_FAILED_TO_CREATE_VARIANT_FOLDER;
-                        }
-                    }
-                }
-            }
-        }
-
-    }
 
     return errorCode;
 }
 
 /*******************************************************************************
- Function Name     : CfgGenerator::updateCfgFileWithCfgData
+ Function Name     : CfgGenerator::updateCfgFileWithRomConstantData
 
  Description       : Updates the CFG files with the ROM constant data parsed from
                      the JLR XML file.
@@ -235,16 +184,76 @@ ERROR_CODES_T CfgGenerator::createVariantSpecificFolders(QStringList const&\
 
  Critical Section  : None
  *******************************************************************************/
-ERROR_CODES_T CfgGenerator::updateCfgFileWithCfgData(QList<ROM_DATA_VIP_CONST_ENUMS>\
-                                                     const& romData,\
-                                                     QStringList const& variantList)
+ERROR_CODES_T CfgGenerator::updateCfgFileWithRomConstantData(class JlrXmlParser* xmlParser)
 {
     ERROR_CODES_T errorCode = ERR_OK;
 
-    qDebug()<<"Total No. of VIP ENUM constants - "<<romData.length();
     qDebug()<<"Selected variant - "<<selectedVariant;
 
     if(selectedVariant != "All")
+    {
+        uint8_t index = 0;
+
+        for(index = 0;index<MAX_ROM_CONST_TYPES;index++)
+        {
+            /* Check whether the parsing is completed for the particular
+             * ROM data constant.
+             */
+            switch(index)
+            {
+                case ROM_TYPE_VIP_CONST_ENUMS:
+                {
+                    errorCode = updateRomDataForVipConstEnumsToCfgFile(xmlParser);
+                }
+                break;
+
+                case ROM_TYPE_VIP_CONST_VALUES:
+                {
+                    errorCode = updateRomDataForVipConstValuesToCfgFile(xmlParser);
+                }
+                break;
+
+                case ROM_TYPE_GIP_CONST_VALUES:
+                {
+                    errorCode = updateRomDataForGipConstValuesToCfgFile(xmlParser);
+                }
+                break;
+
+                case ROM_TYPE_VIP_CONST_TABLES:
+                {
+
+                }
+                break;
+
+                case ROM_TYPE_VIP_CONST_MAPS:
+                {
+
+                }
+                break;
+            }
+        }
+    }
+
+    return errorCode;
+}
+
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateRomDataForVipConstEnumsToCfgFile
+
+ Description       : Updates the ROM constant data for VIP constant enums
+                     into the CFG file.
+
+ Parameters        : class JlrXmlParser
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T CfgGenerator::updateRomDataForVipConstEnumsToCfgFile(class JlrXmlParser *xmlParser)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    if(getRomConstParsedStatus(ROM_TYPE_VIP_CONST_ENUMS)->parsedStatus == true)
     {
         QList<ROM_DATA_VIP_CONST_ENUMS>::const_iterator listIter;
         QFile cfgFile;
@@ -262,7 +271,7 @@ ERROR_CODES_T CfgGenerator::updateCfgFileWithCfgData(QList<ROM_DATA_VIP_CONST_EN
         {
             QTextStream out(&cfgFile);
 
-            for(listIter = romData.begin();listIter != romData.end();++listIter)
+            for(listIter = xmlParser->romDataConstVipEnumList.begin();listIter != xmlParser->romDataConstVipEnumList.end();++listIter)
             {
                 ROM_DATA_VIP_CONST_ENUMS romDataIndex = *listIter;
                 QString cfgWriteLine = "#define ";
@@ -277,48 +286,224 @@ ERROR_CODES_T CfgGenerator::updateCfgFileWithCfgData(QList<ROM_DATA_VIP_CONST_EN
             qDebug()<<"Generated CFG file for "<<selectedVariant;
         }
     }
-    else
+
+    return errorCode;
+}
+
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateRomDataForVipConstValuesToCfgFile
+
+ Description       : Updates the ROM constant data for VIP constant values
+                     into the CFG file.
+
+ Parameters        : class JlrXmlParser
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T CfgGenerator::updateRomDataForVipConstValuesToCfgFile(class JlrXmlParser *xmlParser)
+{
+	ERROR_CODES_T errorCode = ERR_OK;
+
+    if(getRomConstParsedStatus(ROM_TYPE_VIP_CONST_VALUES)->parsedStatus == true)
     {
-        QList<ROM_DATA_VIP_CONST_ENUMS>::const_iterator listIter;
+        QList<ROM_DATA_VIP_CONST_VALUES>::const_iterator listIter;
         QFile cfgFile;
         QString cfgFolderPath = "../output/cfg_files/di.jlr.rom.const.";
-        QString CfgFileName = "cfg_rom_const_vipConstEum.cfg";
+        QString CfgFileName = "cfg_rom_const_vipConstValues.cfg";
 
-        for(QStringList::const_iterator listIterator = variantList.begin();\
-            listIterator != variantList.end();++listIterator)
+        CfgFileName = cfgFolderPath + selectedVariant.toLower() + "/" + CfgFileName;
+        cfgFile.setFileName(CfgFileName);
+
+        if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)))
         {
-            QString variantIndex = *listIterator;
+            errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
+        }
+        else
+        {
+            QTextStream out(&cfgFile);
 
-            CfgFileName = cfgFolderPath + variantIndex.toLower() + "/" + CfgFileName;
-            cfgFile.setFileName(CfgFileName);
-
-            if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)))
+            for(listIter = xmlParser->romDataConstVipValuesList.begin();listIter != xmlParser->romDataConstVipValuesList.end();++listIter)
             {
-                errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
-            }
-            else
-            {
-                QTextStream out(&cfgFile);
+                ROM_DATA_VIP_CONST_VALUES romDataIndex = *listIter;
 
-                for(listIter = romData.begin();listIter != romData.end();++listIter)
+                if(romDataIndex.name != "CONST_ROM_Page_PartNumber")
                 {
-                    ROM_DATA_VIP_CONST_ENUMS romDataIndex = *listIter;
-                    QString cfgWriteLine = "#define ";
-                    cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                                   + "(" + romDataIndex.variant[variantIndex]+ ")" + "\r\n";
-                    out<<cfgWriteLine;
-                    cfgWriteLine.clear();
+                    /* Make sure the constant values are well within the limits
+                     * specified in scaling data
+                     */
+                    if(romDataIndex.scaling.resolution != 0)
+                    {
+                        float_t resolutionRounded = (roundf((romDataIndex.scaling.resolution)*100000)/100000);
+                        int32_t variantValueDerived = int32_t((romDataIndex.variantValue[selectedVariant].toInt())/
+                                                              (resolutionRounded));
+
+                        QString cfgWriteLine = "#define ";
+                        cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                        out<<cfgWriteLine;
+                        cfgWriteLine.clear();
+
+
+                        /*
+                         * The additional error checking for verifying whether the constant value is well within the
+                         * limits of min and max value is disabled for now as the data from JLR XML is not meeting
+                         * the above criteria. Need to check with JLR.
+                         */
+#if 0
+                        if((romDataIndex.variantValue[selectedVariant].toInt() >= romDataIndex.scaling.minValue) &&
+                           (romDataIndex.variantValue[selectedVariant].toInt() <= romDataIndex.scaling.maxValue))
+                        {
+                            int32_t variantValueDerived = ((romDataIndex.variantValue[selectedVariant].toDouble())/
+                                                           (romDataIndex.scaling.resolution));
+
+                            QString cfgWriteLine = "#define ";
+                            cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
+                                           + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                            out<<cfgWriteLine;
+                            cfgWriteLine.clear();
+                        }
+                        else
+                        {
+                           qDebug()<<"ERROR: VIP CONST VALUE OUT OF RANGE - "<<romDataIndex.name;
+                           qDebug()<<"Min Value - "<<romDataIndex.scaling.minValue;
+                           qDebug()<<"Max Value - "<<romDataIndex.scaling.maxValue;
+                           qDebug()<<"Variant value - "<<romDataIndex.variantValue[selectedVariant];
+                           qDebug()<<"****************************************************************************";
+                           errorCode = ERR_VIP_CONST_VALUE_OUT_OF_RANGE;
+                        }
+#endif
+                    }
+                    else
+                    {
+                        int32_t variantValueDerived = (romDataIndex.variantValue[selectedVariant].toDouble());
+
+                        QString cfgWriteLine = "#define ";
+                        cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                        out<<cfgWriteLine;
+                        cfgWriteLine.clear();
+                    }
+
                 }
-                out<<"#endif";
-                cfgFile.flush();
-                cfgFile.close();
-                qDebug()<<"Generated CFG file for "<<selectedVariant<<" variants";
             }
+            out<<"#endif";
+            cfgFile.flush();
+            cfgFile.close();
         }
     }
 
     return errorCode;
 }
+
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateRomDataForGipConstValuesToCfgFile
+
+ Description       : Updates the ROM constant data for GIP constant values
+                     into the CFG file.
+
+ Parameters        : class JlrXmlParser
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T CfgGenerator::updateRomDataForGipConstValuesToCfgFile(class JlrXmlParser *xmlParser)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    if(getRomConstParsedStatus(ROM_TYPE_GIP_CONST_VALUES)->parsedStatus == true)
+    {
+        QList<ROM_DATA_GIP_CONST_VALUES>::const_iterator listIter;
+        QFile cfgFile;
+        QString cfgFolderPath = "../output/cfg_files/di.jlr.rom.const.";
+        QString CfgFileName = "cfg_rom_const_gipConstValues.cfg";
+
+        CfgFileName = cfgFolderPath + selectedVariant.toLower() + "/" + CfgFileName;
+        cfgFile.setFileName(CfgFileName);
+
+        if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)))
+        {
+            errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
+        }
+        else
+        {
+            QTextStream out(&cfgFile);
+
+            for(listIter = xmlParser->romDataConstGipValuesList.begin();listIter != xmlParser->romDataConstGipValuesList.end();++listIter)
+            {
+                ROM_DATA_GIP_CONST_VALUES romDataIndex = *listIter;
+
+                if(romDataIndex.name != "CONST_ROM_Page_PartNumber")
+                {
+                    /* Make sure the constant values are well within the limits
+                     * specified in scaling data
+                     */
+                    if(romDataIndex.scaling.resolution != 0)
+                    {
+                        float_t resolutionRounded = (roundf((romDataIndex.scaling.resolution)*100000)/100000);
+                        int32_t variantValueDerived = int32_t((romDataIndex.variantValue[selectedVariant].toInt())/
+                                                              (resolutionRounded));
+
+                        QString cfgWriteLine = "#define ";
+                        cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                        out<<cfgWriteLine;
+                        cfgWriteLine.clear();
+
+
+                        /*
+                         * The additional error checking for verifying whether the constant value is well within the
+                         * limits of min and max value is disabled for now as the data from JLR XML is not meeting
+                         * the above criteria. Need to check with JLR.
+                         */
+#if 0
+                        if((romDataIndex.variantValue[selectedVariant].toInt() >= romDataIndex.scaling.minValue) &&
+                           (romDataIndex.variantValue[selectedVariant].toInt() <= romDataIndex.scaling.maxValue))
+                        {
+                            int32_t variantValueDerived = ((romDataIndex.variantValue[selectedVariant].toDouble())/
+                                                           (romDataIndex.scaling.resolution));
+
+                            QString cfgWriteLine = "#define ";
+                            cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
+                                           + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                            out<<cfgWriteLine;
+                            cfgWriteLine.clear();
+                        }
+                        else
+                        {
+                           qDebug()<<"ERROR: VIP CONST VALUE OUT OF RANGE - "<<romDataIndex.name;
+                           qDebug()<<"Min Value - "<<romDataIndex.scaling.minValue;
+                           qDebug()<<"Max Value - "<<romDataIndex.scaling.maxValue;
+                           qDebug()<<"Variant value - "<<romDataIndex.variantValue[selectedVariant];
+                           qDebug()<<"****************************************************************************";
+                           errorCode = ERR_VIP_CONST_VALUE_OUT_OF_RANGE;
+                        }
+#endif
+                    }
+                    else
+                    {
+                        int32_t variantValueDerived = (romDataIndex.variantValue[selectedVariant].toDouble());
+
+                        QString cfgWriteLine = "#define ";
+                        cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                        out<<cfgWriteLine;
+                        cfgWriteLine.clear();
+                    }
+
+                }
+            }
+            out<<"#endif";
+            cfgFile.flush();
+            cfgFile.close();
+        }
+    }
+
+    return errorCode;
+}
+
 
 /*******************************************************************************
  Function Name     : CfgGenerator::updateTemplateTextToCfgFile

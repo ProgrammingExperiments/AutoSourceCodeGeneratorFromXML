@@ -54,7 +54,10 @@ public:
     void setSelectedVariant(QString const& variant);
     ERROR_CODES_T setupOutputDirectory(QStringList const& variantList);
     ERROR_CODES_T createVariantSpecificFolders(QStringList const& variantList,QString variantSelected);
-    ERROR_CODES_T updateCfgFileWithCfgData(QList<ROM_DATA_VIP_CONST_ENUMS> const& romData,QStringList const& variantList);
+    ERROR_CODES_T updateCfgFileWithRomConstantData(class JlrXmlParser* xmlParser);
+    ERROR_CODES_T updateRomDataForVipConstEnumsToCfgFile(class JlrXmlParser* xmlParser);
+    ERROR_CODES_T updateRomDataForVipConstValuesToCfgFile(class JlrXmlParser* xmlParser);
+    ERROR_CODES_T updateRomDataForGipConstValuesToCfgFile(class JlrXmlParser* xmlParser);
     ERROR_CODES_T updateTemplateTextToCfgFile(QString const& fileName);
 };
 

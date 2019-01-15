@@ -79,6 +79,24 @@ public:
                                                 ROM_DATA_VIP_CONST_VALUES*\
                                                 vipConstValue);
 
+    /* Member functions for parsing <GIP_ConstantValues> tag */
+    ERROR_CODES_T processGipConstantValueTag(QXmlStreamReader &xml);
+    ERROR_CODES_T parseGipConstValueElements(QXmlStreamReader& xml);
+    ERROR_CODES_T updateScalingFactorsGipConstValues(QXmlStreamReader &xml,\
+                                                     ROM_DATA_GIP_CONST_VALUES*\
+                                                     gipConstValue);
+    ERROR_CODES_T updateGipConstValueVariantValues(QXmlStreamReader &xml,\
+                                                ROM_DATA_GIP_CONST_VALUES*\
+                                                gipConstValue);
+
+    /* Member functions for parsing <VIP_ConstantTables> tag */
+    ERROR_CODES_T processVipConstantTablesTag(QXmlStreamReader &xml);
+    ERROR_CODES_T parseVipConstantTablesElements(QXmlStreamReader& xml);
+    bool isCurrentVariantPresentInVariantList(QString const& variant);
+    ERROR_CODES_T updateVariantSpecificDataForVipConstTables(QXmlStreamReader &xml,\
+                                                     ROM_DATA_VIP_CONST_TABLES*\
+                                                     vipConstTable);
+
     void UpdateVariantInfo(QString const& variantData);
     void UpdateXmlVersion(const QString &xmlVersion);
     static inline QString versionAttribute() {return QStringLiteral("version");}
@@ -86,6 +104,8 @@ public:
     ROM_DATA_INFO romDataInfo;
     QList<ROM_DATA_VIP_CONST_ENUMS> romDataConstVipEnumList;
     QList<ROM_DATA_VIP_CONST_VALUES> romDataConstVipValuesList;
+    QList<ROM_DATA_GIP_CONST_VALUES> romDataConstGipValuesList;
+    QList<ROM_DATA_VIP_CONST_TABLES> romDataConstVipTablesList;
 
 private:
    QXmlStreamReader jlrXml;
@@ -98,6 +118,8 @@ private:
 ROM_CONST_PARSED_STATUS* getRomConstParsedStatus(uint8_t romDataType);
 void printQListVipConstValueContents(QList<ROM_DATA_VIP_CONST_VALUES>\
                                      const& vipConstValue);
+void printQListGipConstValueContents(QList<ROM_DATA_GIP_CONST_VALUES>\
+                                     const& gipConstValue);
 void setRomConstParsedStatus(uint8_t romDataType);
 void resetRomConstParsedStatus(uint8_t romDataType);
 void resetRomConstParsedStatus(void);

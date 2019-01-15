@@ -209,7 +209,7 @@ void MainWindow::on_ImportXml_pushButton_clicked()
     uint8_t index = 0;
 
     /* Show the open XML file window */
-    QString jlrXmlFileStr = QFileDialog::getOpenFileName(this,"Browse the JLR XML file","C://",("XML Files ( *.xml)"));
+    QString jlrXmlFileStr = QFileDialog::getOpenFileName(this,"Browse for the JLR XML file","C://",("XML Files ( *.xml)"));
 
     if(jlrXmlFileStr.isEmpty())
     {
@@ -238,8 +238,6 @@ void MainWindow::on_ImportXml_pushButton_clicked()
         }
         else
         {
-            ui->SelectVariant_comboBox->addItem("All");
-
             while(index < xmlParser->romDataInfo.variantList.length())
             {
                 ui->SelectVariant_comboBox->addItem(xmlParser->romDataInfo.variantList.value(index));
@@ -288,7 +286,7 @@ void MainWindow::on_pushButton_GenerateCfg_clicked()
 {
     ERROR_CODES_T errorCode = ERR_OK;
 
-    //errorCode = cfgGenerator->setupOutputDirectory(xmlParser->romDataInfo.variantList);
+    errorCode = cfgGenerator->setupOutputDirectory(xmlParser->romDataInfo.variantList);
 
     if(errorCode != ERR_OK)
     {
@@ -296,8 +294,7 @@ void MainWindow::on_pushButton_GenerateCfg_clicked()
     }
     else
     {
-        errorCode = cfgGenerator->updateCfgFileWithCfgData(xmlParser->romDataConstVipEnumList,\
-                                                           xmlParser->romDataInfo.variantList);
+        errorCode = cfgGenerator->updateCfgFileWithRomConstantData(xmlParser);
         qDebug() <<"*********FINISHED**********";
         qDebug()<<"\r\n";
     }

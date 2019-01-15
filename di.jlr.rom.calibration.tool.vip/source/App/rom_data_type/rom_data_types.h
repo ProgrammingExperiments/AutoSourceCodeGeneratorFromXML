@@ -83,10 +83,21 @@ typedef struct
 typedef struct
 {
     int32_t minValue;
-    int32_t maxValue;
-    double_t resolution;
+    uint32_t maxValue;
+    float_t resolution;
     QString units;
 }ROM_CONST_SCALING_DATA;
+
+/*=============================================================================
+ * VIP CONSTANT TABLE - TABLE DATA
+ *=============================================================================*/
+typedef struct
+{
+    QString variant;
+    uint8_t index;
+    float_t inputValue;
+    float_t outputValue;
+}VIP_CONST_TABLE_DATA;
 
 /*=============================================================================
  * Information
@@ -118,5 +129,27 @@ typedef struct
     QMap<QString,QString> variantValue;
 }ROM_DATA_VIP_CONST_VALUES;
 
+/*=============================================================================
+ * GIP Constant Values
+ *=============================================================================*/
+typedef struct
+{
+    QString name;
+    QString group;
+    ROM_CONST_SCALING_DATA scaling;
+    QMap<QString,QString> variantValue;
+}ROM_DATA_GIP_CONST_VALUES;
 
+/*=============================================================================
+ * VIP Constant Tables
+ *=============================================================================*/
+typedef struct
+{
+    QString name;
+    QString group;
+    uint16_t length;
+    ROM_CONST_SCALING_DATA InputScaling;
+    ROM_CONST_SCALING_DATA OutputScaling;
+    QMap<QString,VIP_CONST_TABLE_DATA> TableData;
+}ROM_DATA_VIP_CONST_TABLES;
 #endif // ROM_DATA_TYPES_H
