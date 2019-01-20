@@ -127,6 +127,8 @@ void printQListVipConstValueContents(QList<ROM_DATA_VIP_CONST_VALUES>\
                                      const& vipConstValue);
 void printQListGipConstValueContents(QList<ROM_DATA_GIP_CONST_VALUES>\
                                      const& gipConstValue);
+void printQListVipConstTableContents(QList<ROM_DATA_VIP_CONST_TABLES>\
+                                    const& vipConstTable);
 void setRomConstParsedStatus(uint8_t romDataType);
 void resetRomConstParsedStatus(uint8_t romDataType);
 void resetRomConstParsedStatus(void);

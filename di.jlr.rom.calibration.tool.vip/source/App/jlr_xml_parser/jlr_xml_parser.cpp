@@ -150,7 +150,7 @@ ERROR_CODES_T JlrXmlParser::readXML()
                 errorCode = processGipConstantValueTag(jlrXml);
 
                 /* Debug Print GIP CONST VALUE QList contents */
-                //printQListGipConstValueContents(romDataConstGipValuesList);
+                printQListGipConstValueContents(romDataConstGipValuesList);
             }
             else if(jlrXml.name() == "VIP_ConstantTables")
             {
@@ -160,6 +160,9 @@ ERROR_CODES_T JlrXmlParser::readXML()
                  */
                 qDebug()<<"<VIP_ConstantTables>";
                 errorCode = processVipConstantTablesTag(jlrXml);
+
+                /* Debug Print VIP CONST TABLE contents */
+                //printQListVipConstTableContents(romDataConstVipTablesList);
             }
             else if(jlrXml.name() == "VIP_ConstantMaps")
             {
@@ -570,6 +573,50 @@ void printQListGipConstValueContents(QList<ROM_DATA_GIP_CONST_VALUES> const& gip
             iter.next();
             qDebug() << iter.key() << " : " << iter.value();
         }
+    }
+}
+
+
+/*******************************************************************************
+ Function Name     : JlrXmlParser::updateVipConstEnumConstValues
+
+ Description       : Parses the VIP CONST ENUM tags from JLR XML and updates
+                     the values for each constants.
+
+ Parameters        : QXmlStreamReader object,
+                     Pointer to internal data structure
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+void printQListVipConstTableContents(QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable)
+{
+    QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
+    qDebug()<<"*********************** VIP CONST TABLE ***********************";
+
+    for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
+    {
+    	ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
+        qDebug()<<"Name - "<<vipConstTableValueIndex.name;
+
+        qDebug()<<"Input Scaling Min value - "<<vipConstTableValueIndex.InputScaling.minValue;
+        qDebug()<<"Input Scaling Max value - "<<vipConstTableValueIndex.InputScaling.maxValue;
+        qDebug()<<"Input Scaling Resolution - "<<QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',10)
+        qDebug()<<"Input Scaling Units - "<<vipConstTableValueIndex.InputScaling.units;
+
+        qDebug()<<"Output Scaling Min value - "<<vipConstTableValueIndex.OutputScaling.minValue;
+        qDebug()<<"Output Scaling Max value - "<<vipConstTableValueIndex.OutputScaling.maxValue;
+        qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10)
+        qDebug()<<"Output Scaling Units - "<<vipConstTableValueIndex.OutputScaling.units;
+
+//        QMap<QString,VIP_CONST_TABLE_DATA> iter(vipConstTableValueIndex.TableData);
+//
+//        while(iter.hasNext())
+//        {
+//            iter.next();
+//            qDebug() << iter.key() << " : " << iter.
+//        }
     }
 }
 
@@ -1319,10 +1366,6 @@ ERROR_CODES_T JlrXmlParser::updateVariantSpecificValueForVipConstTables(QXmlStre
                     int16_t index = indexAttribute.value("Index").toShort();
                     tableData.index = index;
                     updateInputOutputValueForVipConstTables(xml,&tableData);
-                    qDebug()<<"Variant - "<<tableData.variant;
-                    qDebug()<<"Index - "<<tableData.index;
-                    qDebug()<<"InputValue - "<<tableData.inputValue;
-                    qDebug()<<"OutputValue - "<<tableData.outputValue;
                     vipConstTable->TableData.insert((tableData.variant + "_" + QString::number(tableData.index)),tableData);
                 }
             }
