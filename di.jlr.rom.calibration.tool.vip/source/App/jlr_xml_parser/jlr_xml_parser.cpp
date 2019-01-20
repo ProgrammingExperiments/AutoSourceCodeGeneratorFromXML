@@ -901,18 +901,18 @@ ERROR_CODES_T JlrXmlParser::parseVipConstantTablesElements(QXmlStreamReader &xml
                     /* The variant in table data is present in variant list */
                     updateVariantSpecificValueForVipConstTables(xml,xml.name().toUtf8(),&vipConstTable);
                 }
-//                else if(xml.name() == "Scaling")
-//                {
-//                    //updateScalingFactorsGipConstValues(xml,&gipConstValue);
-//                }
-//                else if(xml.name() == "Value")
-//                {
-//                    //updateGipConstValueVariantValues(xml,&gipConstValue);
-//                }
-//                else
-//                {
-//
-//                }
+                else if(xml.name() == "Input")
+                {
+                    updateInputScalingFactorsVipConstTable(xml,&vipConstTable);
+                }
+                else if(xml.name() == "Output")
+                {
+                    updateOutputScalingFactorsVipConstTable(xml,&vipConstTable);
+                }
+                else
+                {
+
+                }
             }
             xml.readNext();
         }
@@ -1157,6 +1157,126 @@ ERROR_CODES_T JlrXmlParser::updateScalingFactorsGipConstValues(QXmlStreamReader 
     return errorCode;
 }
 
+/*******************************************************************************
+ Function Name     : JlrXmlParser::updateVipConstEnumConstValues
+
+ Description       : Parses the VIP CONST ENUM tags from JLR XML and updates
+                     the values for each constants.
+
+ Parameters        : QXmlStreamReader object,
+                     Pointer to internal data structure
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T JlrXmlParser::updateInputScalingFactorsVipConstTable(QXmlStreamReader &xml,ROM_DATA_VIP_CONST_TABLES* vipConstTable)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    /* We need a start element */
+    if(xml.tokenType() != QXmlStreamReader::StartElement)
+    {
+        errorCode = ERR_VIP_CONST_TABLES_XML_PARSING_FAILED;
+    }
+    else
+    {
+        while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
+                xml.name() == "Input") && !(xml.hasError()))
+        {
+            if(xml.tokenType() == QXmlStreamReader::StartElement)
+            {
+                if(xml.name() != "Input")
+                {
+                    if(xml.name() == "Min_Value")
+                    {
+                        vipConstTable->InputScaling.minValue = xml.readElementText().toInt();
+                    }
+                    else if(xml.name() == "Max_Value")
+                    {
+                        vipConstTable->InputScaling.maxValue = xml.readElementText().toLong();
+                    }
+                    else if(xml.name() == "Resolution")
+                    {
+                        vipConstTable->InputScaling.resolution = xml.readElementText().toFloat();
+                    }
+                    else if(xml.name() == "Units")
+                    {
+                        vipConstTable->InputScaling.units = xml.readElementText();
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            xml.readNext();
+        }
+    }
+
+    return errorCode;
+}
+
+
+/*******************************************************************************
+ Function Name     : JlrXmlParser::updateVipConstEnumConstValues
+
+ Description       : Parses the VIP CONST ENUM tags from JLR XML and updates
+                     the values for each constants.
+
+ Parameters        : QXmlStreamReader object,
+                     Pointer to internal data structure
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T JlrXmlParser::updateOutputScalingFactorsVipConstTable(QXmlStreamReader &xml,ROM_DATA_VIP_CONST_TABLES* vipConstTable)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    /* We need a start element */
+    if(xml.tokenType() != QXmlStreamReader::StartElement)
+    {
+        errorCode = ERR_VIP_CONST_TABLES_XML_PARSING_FAILED;
+    }
+    else
+    {
+        while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
+                xml.name() == "Output") && !(xml.hasError()))
+        {
+            if(xml.tokenType() == QXmlStreamReader::StartElement)
+            {
+                if(xml.name() != "Output")
+                {
+                    if(xml.name() == "Min_Value")
+                    {
+                        vipConstTable->OutputScaling.minValue = xml.readElementText().toInt();
+                    }
+                    else if(xml.name() == "Max_Value")
+                    {
+                        vipConstTable->OutputScaling.maxValue= xml.readElementText().toLong();
+                    }
+                    else if(xml.name() == "Resolution")
+                    {
+                        vipConstTable->OutputScaling.resolution = xml.readElementText().toFloat();
+                    }
+                    else if(xml.name() == "Units")
+                    {
+                        vipConstTable->OutputScaling.units = xml.readElementText();
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            xml.readNext();
+        }
+    }
+
+    return errorCode;
+}
 /*******************************************************************************
  Function Name     : JlrXmlParser::updateVipConstEnumConstValues
 
