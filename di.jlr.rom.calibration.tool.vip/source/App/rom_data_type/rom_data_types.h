@@ -94,9 +94,9 @@ typedef struct
 typedef struct
 {
     QString variant;
-    uint8_t index;
-    float_t inputValue;
-    float_t outputValue;
+    uint16_t index;
+    QString inputValue;
+    QString outputValue;
 }VIP_CONST_TABLE_DATA;
 
 /*=============================================================================

@@ -887,22 +887,18 @@ ERROR_CODES_T JlrXmlParser::parseVipConstantTablesElements(QXmlStreamReader &xml
                 if(xml.name().toString() == constName)
                 {
                     vipConstTable.name = xml.name().toString();
-                    qDebug()<<vipConstTable.name;
                 }
                 else if(xml.name() == "Group")
                 {
                     vipConstTable.group = xml.readElementText();
-                    qDebug()<<vipConstTable.group;
                 }
                 else if(xml.name() == "Length")
                 {
                     vipConstTable.length = xml.readElementText().toShort();
-                    qDebug()<<vipConstTable.length;
                 }
                 else if(false != isCurrentVariantPresentInVariantList(xml.name().toUtf8()))
                 {
                     /* The variant in table data is present in variant list */
-                    qDebug()<<"VARIANT - "<<xml.name();
                     updateVariantSpecificValueForVipConstTables(xml,xml.name().toUtf8(),&vipConstTable);
                 }
 //                else if(xml.name() == "Scaling")
@@ -1179,6 +1175,7 @@ ERROR_CODES_T JlrXmlParser::updateVariantSpecificValueForVipConstTables(QXmlStre
                                                                         ROM_DATA_VIP_CONST_TABLES* vipConstTable)
 {
     ERROR_CODES_T errorCode = ERR_OK;
+    VIP_CONST_TABLE_DATA tableData;
 
     /* We need a start element */
     if(xml.tokenType() != QXmlStreamReader::StartElement)
@@ -1192,7 +1189,72 @@ ERROR_CODES_T JlrXmlParser::updateVariantSpecificValueForVipConstTables(QXmlStre
         {
             if(xml.tokenType() == QXmlStreamReader::StartElement)
             {
-                qDebug()<<xml.name();
+                if(xml.name() == variant)
+                {
+                    tableData.variant = xml.name().toString();
+                }
+                else if(xml.name() == "Value")
+                {
+                    QXmlStreamAttributes indexAttribute = xml.attributes();
+                    int16_t index = indexAttribute.value("Index").toShort();
+                    tableData.index = index;
+                    updateInputOutputValueForVipConstTables(xml,&tableData);
+                    qDebug()<<"Variant - "<<tableData.variant;
+                    qDebug()<<"Index - "<<tableData.index;
+                    qDebug()<<"InputValue - "<<tableData.inputValue;
+                    qDebug()<<"OutputValue - "<<tableData.outputValue;
+                    vipConstTable->TableData.insert((tableData.variant + "_" + QString::number(tableData.index)),tableData);
+                }
+            }
+            xml.readNext();
+        }
+    }
+
+    return errorCode;
+}
+
+/*******************************************************************************
+ Function Name     : JlrXmlParser::updateVipConstEnumConstValues
+
+ Description       : Parses the VIP CONST ENUM tags from JLR XML and updates
+                     the values for each constants.
+
+ Parameters        : QXmlStreamReader object,
+                     Pointer to internal data structure
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T JlrXmlParser::updateInputOutputValueForVipConstTables(QXmlStreamReader &xml,
+                                                                    VIP_CONST_TABLE_DATA* tableData)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    /* We need a start element */
+    if(xml.tokenType() != QXmlStreamReader::StartElement)
+    {
+        errorCode = ERR_VIP_CONST_TABLES_XML_PARSING_FAILED;
+    }
+    else
+    {
+        while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
+                xml.name() == "Value") && !(xml.hasError()))
+        {
+            if(xml.tokenType() == QXmlStreamReader::StartElement)
+            {
+                if(xml.name() == "Input")
+                {
+                    tableData->inputValue = xml.readElementText();
+                }
+                else if(xml.name() == "Output")
+                {
+                    tableData->outputValue = xml.readElementText();
+                }
+                else
+                {
+
+                }
             }
             xml.readNext();
         }

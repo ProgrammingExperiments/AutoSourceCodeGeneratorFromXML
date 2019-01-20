@@ -97,6 +97,9 @@ public:
                                                               QString const& variant,\
                                                               ROM_DATA_VIP_CONST_TABLES*\
                                                               vipConstTable);
+    ERROR_CODES_T updateInputOutputValueForVipConstTables(QXmlStreamReader &xml,\
+                                                          VIP_CONST_TABLE_DATA* tableData);
+
 
     void UpdateVariantInfo(QString const& variantData);
     void UpdateXmlVersion(const QString &xmlVersion);
