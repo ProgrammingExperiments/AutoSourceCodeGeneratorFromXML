@@ -150,7 +150,7 @@ ERROR_CODES_T JlrXmlParser::readXML()
                 errorCode = processGipConstantValueTag(jlrXml);
 
                 /* Debug Print GIP CONST VALUE QList contents */
-                printQListGipConstValueContents(romDataConstGipValuesList);
+                //printQListGipConstValueContents(romDataConstGipValuesList);
             }
             else if(jlrXml.name() == "VIP_ConstantTables")
             {
@@ -602,16 +602,21 @@ void printQListVipConstTableContents(QList<ROM_DATA_VIP_CONST_TABLES> const& vip
 
         qDebug()<<"Input Scaling Min value - "<<vipConstTableValueIndex.InputScaling.minValue;
         qDebug()<<"Input Scaling Max value - "<<vipConstTableValueIndex.InputScaling.maxValue;
-        qDebug()<<"Input Scaling Resolution - "<<QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',10)
+        qDebug()<<"Input Scaling Resolution - "<<QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',10);
         qDebug()<<"Input Scaling Units - "<<vipConstTableValueIndex.InputScaling.units;
 
         qDebug()<<"Output Scaling Min value - "<<vipConstTableValueIndex.OutputScaling.minValue;
         qDebug()<<"Output Scaling Max value - "<<vipConstTableValueIndex.OutputScaling.maxValue;
-        qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10)
+        qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10);
         qDebug()<<"Output Scaling Units - "<<vipConstTableValueIndex.OutputScaling.units;
 
 //        QMap<QString,VIP_CONST_TABLE_DATA> iter(vipConstTableValueIndex.TableData);
-//
+
+//        for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
+//        {
+//            qDebug() << value.index;
+//        }
+
 //        while(iter.hasNext())
 //        {
 //            iter.next();
