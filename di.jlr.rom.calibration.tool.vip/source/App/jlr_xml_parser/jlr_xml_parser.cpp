@@ -162,7 +162,7 @@ ERROR_CODES_T JlrXmlParser::readXML()
                 errorCode = processVipConstantTablesTag(jlrXml);
 
                 /* Debug Print VIP CONST TABLE contents */
-                //printQListVipConstTableContents(romDataConstVipTablesList);
+                printQListVipConstTableContents(romDataConstVipTablesList);
             }
             else if(jlrXml.name() == "VIP_ConstantMaps")
             {
@@ -610,18 +610,12 @@ void printQListVipConstTableContents(QList<ROM_DATA_VIP_CONST_TABLES> const& vip
         qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10);
         qDebug()<<"Output Scaling Units - "<<vipConstTableValueIndex.OutputScaling.units;
 
-//        QMap<QString,VIP_CONST_TABLE_DATA> iter(vipConstTableValueIndex.TableData);
+        for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
+        {
+            qDebug()<<value.variant<<" : "<<value.index<<" : "<<value.inputValue<<" : "<<value.outputValue;
+        }
 
-//        for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
-//        {
-//            qDebug() << value.index;
-//        }
-
-//        while(iter.hasNext())
-//        {
-//            iter.next();
-//            qDebug() << iter.key() << " : " << iter.
-//        }
+        qDebug()<<"***********************************************************************************************";
     }
 }
 
