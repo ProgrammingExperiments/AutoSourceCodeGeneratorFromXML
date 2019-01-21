@@ -221,7 +221,7 @@ ERROR_CODES_T CfgGenerator::updateCfgFileWithRomConstantData(class JlrXmlParser*
 
                 case ROM_TYPE_VIP_CONST_TABLES:
                 {
-
+                	errorCode = updateRomDataForVipConstTableToCfgFile(xmlParser);
                 }
                 break;
 
@@ -504,7 +504,94 @@ ERROR_CODES_T CfgGenerator::updateRomDataForGipConstValuesToCfgFile(class JlrXml
     return errorCode;
 }
 
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateRomDataForGipConstValuesToCfgFile
 
+ Description       : Updates the ROM constant data for GIP constant values
+                     into the CFG file.
+
+ Parameters        : class JlrXmlParser
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T CfgGenerator::updateRomDataForVipConstTableToCfgFile(class JlrXmlParser *xmlParser)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    if(getRomConstParsedStatus(ROM_TYPE_VIP_CONST_TABLES)->parsedStatus == true)
+    {
+        QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
+        QFile cfgFile;
+        QString cfgFolderPath = "../output/cfg_files/di.jlr.rom.const.";
+        QString CfgFileName = "cfg_rom_const_vipConstTables.cfg";
+
+        CfgFileName = cfgFolderPath + selectedVariant.toLower() + "/" + CfgFileName;
+
+        populateVipConstTableDataInCfgFile(CfgFileName,xmlParser->romDataConstVipTablesList);
+
+    }
+
+    return errorCode;
+}
+
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateTemplateTextToCfgFile
+
+ Description       : Updates the Visteon header file template to CFG files.
+
+ Parameters        : QString const& fileName
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cfgFileName,\
+		                            QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable)
+{
+	ERROR_CODES_T errorCode = ERR_OK;
+	QFile cfgFile(cfgFileName);
+	QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
+
+
+	if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)))
+    {
+        errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
+    }
+    else
+    {
+        for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
+        {
+        	ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
+            qDebug()<<"Name - "<<vipConstTableValueIndex.name;
+
+            qDebug()<<"Input Scaling Min value - "<<vipConstTableValueIndex.InputScaling.minValue;
+            qDebug()<<"Input Scaling Max value - "<<vipConstTableValueIndex.InputScaling.maxValue;
+            qDebug()<<"Input Scaling Resolution - "<<QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',10);
+            qDebug()<<"Input Scaling Units - "<<vipConstTableValueIndex.InputScaling.units;
+
+            qDebug()<<"Output Scaling Min value - "<<vipConstTableValueIndex.OutputScaling.minValue;
+            qDebug()<<"Output Scaling Max value - "<<vipConstTableValueIndex.OutputScaling.maxValue;
+            qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10);
+            qDebug()<<"Output Scaling Units - "<<vipConstTableValueIndex.OutputScaling.units;
+
+            for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
+            {
+                qDebug()<<value.variant<<" : "<<value.index<<" : "<<value.inputValue<<" : "<<value.outputValue;
+            }
+
+
+
+        }
+
+    }
+
+
+
+
+	 return errorCode;
+}
 /*******************************************************************************
  Function Name     : CfgGenerator::updateTemplateTextToCfgFile
 

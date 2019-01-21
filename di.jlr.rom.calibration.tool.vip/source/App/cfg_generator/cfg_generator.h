@@ -58,7 +58,10 @@ public:
     ERROR_CODES_T updateRomDataForVipConstEnumsToCfgFile(class JlrXmlParser* xmlParser);
     ERROR_CODES_T updateRomDataForVipConstValuesToCfgFile(class JlrXmlParser* xmlParser);
     ERROR_CODES_T updateRomDataForGipConstValuesToCfgFile(class JlrXmlParser* xmlParser);
+    ERROR_CODES_T updateRomDataForVipConstTableToCfgFile(class JlrXmlParser* xmlParser);
     ERROR_CODES_T updateTemplateTextToCfgFile(QString const& fileName);
+    ERROR_CODES_T populateVipConstTableDataInCfgFile(QString const& cfgFileName,\
+    		                            QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable);
 };
 
 #endif // CFG_GENERATOR_H

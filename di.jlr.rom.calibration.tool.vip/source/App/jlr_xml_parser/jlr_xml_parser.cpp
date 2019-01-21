@@ -162,7 +162,7 @@ ERROR_CODES_T JlrXmlParser::readXML()
                 errorCode = processVipConstantTablesTag(jlrXml);
 
                 /* Debug Print VIP CONST TABLE contents */
-                printQListVipConstTableContents(romDataConstVipTablesList);
+                //printQListVipConstTableContents(romDataConstVipTablesList);
             }
             else if(jlrXml.name() == "VIP_ConstantMaps")
             {
