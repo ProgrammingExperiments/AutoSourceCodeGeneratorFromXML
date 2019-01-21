@@ -1,0 +1,38 @@
+
+#define @CONST_NAME                                   \
+{                                                     \
+    {(UINT16)@MIN,   (UINT16)@MAX   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+    {(UINT16)@IN,    (UINT16)@OUT   },                \
+
+};

@@ -551,10 +551,18 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
 		                            QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable)
 {
 	ERROR_CODES_T errorCode = ERR_OK;
-	QFile cfgFile(cfgFileName);
 	QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
 
+    for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
+    {
+        updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
+        ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
+        //qDebug()<<"Name - "<<vipConstTableValueIndex.name;
+    }
 
+
+
+#if 0
 	if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)))
     {
         errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
@@ -563,32 +571,28 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
     {
         for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
         {
+            updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
         	ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
             qDebug()<<"Name - "<<vipConstTableValueIndex.name;
 
-            qDebug()<<"Input Scaling Min value - "<<vipConstTableValueIndex.InputScaling.minValue;
-            qDebug()<<"Input Scaling Max value - "<<vipConstTableValueIndex.InputScaling.maxValue;
-            qDebug()<<"Input Scaling Resolution - "<<QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',10);
-            qDebug()<<"Input Scaling Units - "<<vipConstTableValueIndex.InputScaling.units;
-
-            qDebug()<<"Output Scaling Min value - "<<vipConstTableValueIndex.OutputScaling.minValue;
-            qDebug()<<"Output Scaling Max value - "<<vipConstTableValueIndex.OutputScaling.maxValue;
-            qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10);
-            qDebug()<<"Output Scaling Units - "<<vipConstTableValueIndex.OutputScaling.units;
-
-            for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
-            {
-                qDebug()<<value.variant<<" : "<<value.index<<" : "<<value.inputValue<<" : "<<value.outputValue;
-            }
-
-
-
+//            qDebug()<<"Input Scaling Min value - "<<vipConstTableValueIndex.InputScaling.minValue;
+//            qDebug()<<"Input Scaling Max value - "<<vipConstTableValueIndex.InputScaling.maxValue;
+//            qDebug()<<"Input Scaling Resolution - "<<QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',10);
+//            qDebug()<<"Input Scaling Units - "<<vipConstTableValueIndex.InputScaling.units;
+//
+//            qDebug()<<"Output Scaling Min value - "<<vipConstTableValueIndex.OutputScaling.minValue;
+//            qDebug()<<"Output Scaling Max value - "<<vipConstTableValueIndex.OutputScaling.maxValue;
+//            qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10);
+//            qDebug()<<"Output Scaling Units - "<<vipConstTableValueIndex.OutputScaling.units;
+//
+//            for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
+//            {
+//                qDebug()<<value.variant<<" : "<<value.index<<" : "<<value.inputValue<<" : "<<value.outputValue;
+//            }
         }
 
     }
-
-
-
+#endif
 
 	 return errorCode;
 }
@@ -619,9 +623,55 @@ ERROR_CODES_T CfgGenerator::updateTemplateTextToCfgFile(QString const& fileName)
         QTextStream cfgTemplateContent(&cfgTemplateFile);
         QString text = cfgTemplateContent.readAll();
 
-        if(!cfgFile.open(QFile::WriteOnly | QFile::Text))
+        if(!cfgFile.open(QFile::WriteOnly | QFile::Text | QIODevice::Append))
         {
             errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
+        }
+        else
+        {
+            QTextStream out(&cfgFile);
+            out<<text;
+            cfgFile.flush();
+            cfgFile.close();
+        }
+        cfgTemplateFile.close();
+    }
+
+    return errorCode;
+}
+
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateTemplateTextToCfgFile
+
+ Description       : Updates the Visteon header file template to CFG files.
+
+ Parameters        : QString const& fileName
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T CfgGenerator::updateVipConstTableCfgTemplateToCfgFile(QString const& fileName)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    QFile cfgTemplateFile("../source/vipConstTableFormat.txt");
+    QFile cfgFile(fileName);
+
+    if(!(cfgTemplateFile.open(QFile::ReadOnly | QFile::Text)))
+    {
+        errorCode = ERR_FAILED_TO_OPEN_CFG_TEMPLATE_FILE;
+        qDebug()<<"ERR_FAILED_TO_OPEN_CFG_TEMPLATE_FILE";
+    }
+    else
+    {
+        QTextStream cfgTemplateContent(&cfgTemplateFile);
+        QString text = cfgTemplateContent.readAll();
+
+        if(!cfgFile.open(QFile::WriteOnly | QFile::Text | QFile::Append))
+        {
+            errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
+            qDebug()<<"ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE";
         }
         else
         {
