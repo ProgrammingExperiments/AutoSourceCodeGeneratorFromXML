@@ -551,6 +551,7 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
                                     QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable)
 {
     ERROR_CODES_T errorCode = ERR_OK;
+    MIN_MAX_INPUT_SCALING minMaxInputScaling;
 
     QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
 
@@ -566,11 +567,18 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
         }
         else
         {
+            ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
             QTextStream cfgFileStream(&cfgFile);
             QString cfgFileContents = cfgFileStream.readAll();
+            findMinMaxOfInputScalingVipConstTable(&vipConstTableValueIndex,&minMaxInputScaling);
 
-            ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
+            /* Update constant name in CFG file */
             cfgFileContents.replace(QString("@CONST_NAME "),vipConstTableValueIndex.name);
+
+            /* Update MIN & MAX values of input scaling in first raw of 2D table */
+            cfgFileContents.replace(QString("@MIN"),QString::number(minMaxInputScaling.minValue));
+            cfgFileContents.replace(QString("@MAX"),QString::number(minMaxInputScaling.maxValue));
+
             cfgFile.seek(0);
             cfgFile.write(cfgFileContents.toUtf8());
 
@@ -613,6 +621,24 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
 #endif
 
 	 return errorCode;
+}
+
+void CfgGenerator::findMinMaxOfInputScalingVipConstTable(ROM_DATA_VIP_CONST_TABLES* vipConstTableValue,\
+                                                                  MIN_MAX_INPUT_SCALING* minMaxValues)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+    QList<double_t> inputValues;
+
+    for(const VIP_CONST_TABLE_DATA & value: vipConstTableValue->TableData)
+    {
+        if(value.variant == selectedVariant)
+        {
+            inputValues.append(value.inputValue.toDouble());
+        }
+    }
+    float_t resolutionRounded = (roundf((vipConstTableValue->InputScaling.resolution)*100000)/100000);
+    minMaxValues->minValue = int32_t((*std::min_element(inputValues.begin(), inputValues.end()))/resolutionRounded);
+    minMaxValues->maxValue = int32_t((*std::max_element(inputValues.begin(), inputValues.end()))/resolutionRounded);
 }
 /*******************************************************************************
  Function Name     : CfgGenerator::updateTemplateTextToCfgFile

@@ -152,4 +152,12 @@ typedef struct
     ROM_CONST_SCALING_DATA OutputScaling;
     QMap<QString,VIP_CONST_TABLE_DATA> TableData;
 }ROM_DATA_VIP_CONST_TABLES;
+
+typedef struct
+{
+    int32_t minValue;
+    int32_t maxValue;
+
+}MIN_MAX_INPUT_SCALING;
+
 #endif // ROM_DATA_TYPES_H
