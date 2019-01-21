@@ -548,36 +548,37 @@ ERROR_CODES_T CfgGenerator::updateRomDataForVipConstTableToCfgFile(class JlrXmlP
  Critical Section  : None
  *******************************************************************************/
 ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cfgFileName,\
-		                            QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable)
+                                    QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable)
 {
-	ERROR_CODES_T errorCode = ERR_OK;
-    QFile cfgFile(cfgFileName);
+    ERROR_CODES_T errorCode = ERR_OK;
 
-    if(!cfgFile.open(QFile::ReadWrite | QFile::Text | QFile::Append))
-    {
-        errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
-    }
-    else
-    {
-        QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
+    QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
 
-        for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
+    for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
+    {
+        updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
+
+        QFile cfgFile(cfgFileName);
+
+        if(!cfgFile.open(QFile::ReadWrite | QFile::Text))
         {
-            updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
-            QString cfgFileContents = cfgFile.readAll();
-            qDebug()<<cfgFileContents;
-            break;
+            errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
+        }
+        else
+        {
+            QTextStream cfgFileStream(&cfgFile);
+            QString cfgFileContents = cfgFileStream.readAll();
+
             ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
             cfgFileContents.replace(QString("@CONST_NAME "),vipConstTableValueIndex.name);
             cfgFile.seek(0);
             cfgFile.write(cfgFileContents.toUtf8());
+
+            cfgFile.flush();
+            cfgFile.close();
         }
-        cfgFile.flush();
-        cfgFile.close();
+
     }
-
-
-
 
 #if 0
 	if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)))
