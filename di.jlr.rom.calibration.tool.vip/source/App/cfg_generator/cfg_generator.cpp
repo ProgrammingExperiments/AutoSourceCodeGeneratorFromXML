@@ -551,14 +551,31 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
 		                            QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable)
 {
 	ERROR_CODES_T errorCode = ERR_OK;
-	QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
+    QFile cfgFile(cfgFileName);
 
-    for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
+    if(!cfgFile.open(QFile::ReadWrite | QFile::Text | QFile::Append))
     {
-        updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
-        ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
-        //qDebug()<<"Name - "<<vipConstTableValueIndex.name;
+        errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
     }
+    else
+    {
+        QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
+
+        for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
+        {
+            updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
+            QString cfgFileContents = cfgFile.readAll();
+            qDebug()<<cfgFileContents;
+            break;
+            ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
+            cfgFileContents.replace(QString("@CONST_NAME "),vipConstTableValueIndex.name);
+            cfgFile.seek(0);
+            cfgFile.write(cfgFileContents.toUtf8());
+        }
+        cfgFile.flush();
+        cfgFile.close();
+    }
+
 
 
 
