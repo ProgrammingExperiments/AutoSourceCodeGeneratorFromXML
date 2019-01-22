@@ -579,6 +579,15 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
             cfgFileContents.replace(QString("@MIN"),QString::number(minMaxInputScaling.minValue));
             cfgFileContents.replace(QString("@MAX"),QString::number(minMaxInputScaling.maxValue));
 
+           for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
+           {
+               if(value.variant == selectedVariant)
+               {
+                    qDebug()<<value.variant<<" : "<<value.index<<" : "<<value.inputValue<<" : "<<value.outputValue;
+               }
+
+           }
+
             cfgFile.seek(0);
             cfgFile.write(cfgFileContents.toUtf8());
 

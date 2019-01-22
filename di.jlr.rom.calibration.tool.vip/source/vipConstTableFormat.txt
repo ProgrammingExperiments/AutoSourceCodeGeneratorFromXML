@@ -1,38 +1,30 @@
-
-#define @CONST_NAME                                   \
-{                                                     \
-    {(UINT16)@MIN,   (UINT16)@MAX   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-    {(UINT16)@IN,    (UINT16)@OUT   },                \
-
+ 
+#define @CONST_NAME                                        \
+{                                                          \
+    {(UINT16)@MIN,      (UINT16)@MAX    },                 \
+    {(UINT16)@IN1,      (UINT16)@OUT1    },                \
+    {(UINT16)@IN2,      (UINT16)@OUT2    },                \
+    {(UINT16)@IN3,      (UINT16)@OUT3    },                \
+    {(UINT16)@IN4,      (UINT16)@OUT4    },                \
+    {(UINT16)@IN5,      (UINT16)@OUT5    },                \
+    {(UINT16)@IN6,      (UINT16)@OUT6    },                \
+    {(UINT16)@IN7,      (UINT16)@OUT7    },                \
+    {(UINT16)@IN8,      (UINT16)@OUT8    },                \
+    {(UINT16)@IN9,      (UINT16)@OUT9    },                \
+    {(UINT16)@IN10,     (UINT16)@OUT10   },                \
+    {(UINT16)@IN11,     (UINT16)@OUT11   },                \
+    {(UINT16)@IN12,     (UINT16)@OUT12   },                \
+    {(UINT16)@IN13,     (UINT16)@OUT13   },                \
+    {(UINT16)@IN14,     (UINT16)@OUT14   },                \
+    {(UINT16)@IN15,     (UINT16)@OUT15   },                \
+    {(UINT16)@IN16,     (UINT16)@OUT16   },                \
+    {(UINT16)@IN17,     (UINT16)@OUT17   },                \
+    {(UINT16)@IN18,     (UINT16)@OUT18   },                \
+    {(UINT16)@IN19,     (UINT16)@OUT19   },                \
+    {(UINT16)@IN20,     (UINT16)@OUT20   },                \
+    {(UINT16)@IN21,     (UINT16)@OUT21   },                \
+    {(UINT16)@IN22,     (UINT16)@OUT22   },                \
+    {(UINT16)@IN23,     (UINT16)@OUT23   },                \
+    {(UINT16)@IN24,     (UINT16)@OUT24   },                \
+    {(UINT16)@IN25,     (UINT16)@OUT25   },                \
 };
