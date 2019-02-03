@@ -67,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     xmlParser    = new JlrXmlParser;
     cfgGenerator = new CfgGenerator;
+    mapFileData  = new MapDataContents;
 }
 
 /*******************************************************************************
@@ -84,6 +85,7 @@ MainWindow::~MainWindow()
 {
     delete xmlParser;
     delete cfgGenerator;
+    delete mapFileData;
     delete ui;
 }
 
@@ -334,6 +336,8 @@ void MainWindow::on_pushButton_BrowseMap_clicked()
         mapFileData->removeEmptyLinesInMapFile(mapDataFileObj);
 
         mapFileData->importMapFileData(mapDataFileStr);
+
+        //mapFileData->printMapDataContents();
 
         qDebug()<<"Successfully imported the MAP file contents to internal data structure";
     }
