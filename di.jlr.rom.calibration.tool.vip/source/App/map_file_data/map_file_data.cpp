@@ -73,7 +73,7 @@ ERROR_CODES_T MapDataContents::importMapFileData(QString const& cfgFileName)
 
     if(!mapDataFileObj.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        //QMessageBox::critical(this,"Error","Unable to open ROM constant MAP file");
+        qDebug()<<"Error - Unable to open ROM constant MAP file for parsing.";
     }
     else
     {
