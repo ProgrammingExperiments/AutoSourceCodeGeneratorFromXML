@@ -62,7 +62,7 @@ public:
     ERROR_CODES_T processMapDataFileByLine(QString & line);
 
     /* Data Structures */
-    QList<MAP_DATA_FILE> romConstMapFileData;
+    QList<MAP_DATA_FILE> romConstMapFileDataList;
 
 private:
 };

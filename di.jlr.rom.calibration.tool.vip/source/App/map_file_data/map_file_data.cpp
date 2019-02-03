@@ -112,18 +112,18 @@ ERROR_CODES_T MapDataContents::processMapDataFileByLine(QString & line)
         QRegExp rx("[, ]");// match a comma or a space
         QStringList list = line.split(rx, QString::SkipEmptyParts);
 
-        qDebug()<<"Constant Name - "<<list.at(0);
-        qDebug()<<"Constant Address - "<<list.at(1);
-        qDebug()<<"Constant Length - "<<list.at(2);
-
         mapDataImported.constName    = list.at(0);
         mapDataImported.constAddress = list.at(1);
-        mapDataImported.constSize    = list.at(2);
+        mapDataImported.constSize   = list.at(2);
+
+        qDebug()<<"Constant Name - "<<mapDataImported.constName;
+        qDebug()<<"Constant Address - "<<mapDataImported.constAddress;
+        qDebug()<<"Constant Length - "<<mapDataImported.constSize ;
+
         qDebug()<<"\r\n";
-    }
-    else
-    {
-        qDebug()<<"Address line not found.";
+
+        /* Update the MAP data to MAP data internal structure */
+        romConstMapFileDataList.append(mapDataImported);
     }
 
     return errorCode;
