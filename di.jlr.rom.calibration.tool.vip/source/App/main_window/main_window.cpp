@@ -323,7 +323,7 @@ void MainWindow::on_pushButton_BrowseMap_clicked()
     /* Assign it to the file object and open the file in read mode */
     QFile mapDataFileObj(mapDataFileStr);
 
-    if(!mapDataFileObj.open(QIODevice::ReadOnly | QIODevice::Text))
+    if(!mapDataFileObj.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         QMessageBox::critical(this,"Error","Unable to open ROM constant MAP file");
     }

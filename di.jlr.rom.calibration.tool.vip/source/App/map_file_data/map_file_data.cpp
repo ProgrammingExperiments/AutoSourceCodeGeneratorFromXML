@@ -69,13 +69,23 @@ ERROR_CODES_T MapDataContents::importMapFileData(QFile & mapFile)
 {
     ERROR_CODES_T errorCode = ERR_OK;
 
+    QString mapDataString;
+
     QTextStream in(&mapFile);
 
     while (!in.atEnd())
     {
        QString line = in.readLine();
-       processMapDataFileByLine(line);
+
+       if(line.contains("0x"))
+       {
+           mapDataString.append(line + "\n");
+       }
     }
+
+    mapFile.resize(0);
+    in << mapDataString;
+    mapFile.close();
 
     return errorCode;
 }
