@@ -84,7 +84,7 @@ typedef struct
 {
     int32_t minValue;
     uint32_t maxValue;
-    float_t resolution;
+    double_t resolution;
     QString units;
 }ROM_CONST_SCALING_DATA;
 
@@ -153,6 +153,19 @@ typedef struct
     QMap<QString,VIP_CONST_TABLE_DATA> TableData;
 }ROM_DATA_VIP_CONST_TABLES;
 
+/*=============================================================================
+ * MAP Data File
+ *=============================================================================*/
+typedef struct
+{
+    QString constName;
+    QString constAddress;
+    QString constSize;
+}MAP_DATA_FILE;
+
+/*=============================================================================
+ * VIP CONST TABLE - MIN MAX VALUES
+ *=============================================================================*/
 typedef struct
 {
     int32_t minValue;

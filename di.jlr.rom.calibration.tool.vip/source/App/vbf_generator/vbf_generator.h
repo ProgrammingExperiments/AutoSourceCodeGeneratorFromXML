@@ -18,61 +18,45 @@
 *                                                                            *
 **============================================================================
 **
-**  File Name    : main_window.h
+**  File Name    : map_file_data.h
 **
 **  Author       : Anil Joseph
 **
-**  Description  : Class definition for GUI main window
+**  Description  : Class definition for MAP file data module.
 **
 **  Organization : Driver Information Software Section,
 **                 DI Core Engineering Department
 **
 **===========================================================================*/
-#ifndef MAIN_WINDOW_H
-#define MAIN_WINDOW_H
+#ifndef VBF_GENERATOR
+#define VBF_GENERATOR
 
 /******************************************************************************
  *                           Qt Specific Include Files                        *
  ******************************************************************************/
-#include <QMainWindow>
+#include <QFile>
+#include <QXmlStreamReader>
 
 /******************************************************************************
  *                          Application Specfic Include Files                 *
  ******************************************************************************/
-#include "cfg_generator/cfg_generator.h"
-#include "jlr_xml_parser/jlr_xml_parser.h"
-#include "map_file_data/map_file_data.h"
+#include "main_window/main_window.h"
+#include "rom_data_type/rom_data_types.h"
+#include "error_handler/error_codes.h"
+
+/*==========================================================================*/
+/*                            Macro Definitions                             */
+/*==========================================================================*/
+
 
 /*==========================================================================*/
 /*                              Class Definitions                           */
 /*==========================================================================*/
-namespace Ui {
-class MainWindow;
-}
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
 
-public:
-    QStringList* variantList;
-    explicit MainWindow(QWidget *parent = 0);
-    void processErrorCodes(ERROR_CODES_T errorCode);
-    ~MainWindow();
+/*==========================================================================*/
+/*                               Function Prototypes                        */
+/*==========================================================================*/
 
-private slots:
-    void on_SelectVariant_comboBox_currentIndexChanged(int index);
-    void on_pushButton_GenerateCfg_clicked();
 
-    void on_BrowseXml_PushButton_clicked();
-
-    void on_pushButton_BrowseMap_clicked();
-
-private:
-    Ui::MainWindow *ui;
-    class JlrXmlParser *xmlParser;
-    class CfgGenerator *cfgGenerator;
-    class MapDataContents *mapFileData;
-};
-
-#endif // MAIN_WINDOW_H
+#endif // VBF_GENERATOR

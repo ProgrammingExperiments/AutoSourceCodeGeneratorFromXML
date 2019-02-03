@@ -27,14 +27,18 @@ SOURCES += \
     App/cfg_generator/cfg_generator.cpp \
     App/jlr_xml_parser/jlr_xml_parser.cpp \
     App/main_window/main_window.cpp \
-    App/main.cpp
+    App/main.cpp \
+    App/map_file_data/map_file_data.cpp \
+    App/vbf_generator/vbf_generator.cpp
 
 HEADERS += \
     App/cfg_generator/cfg_generator.h \
     App/error_handler/error_codes.h \
     App/jlr_xml_parser/jlr_xml_parser.h \
     App/main_window/main_window.h \
-    App/rom_data_type/rom_data_types.h
+    App/rom_data_type/rom_data_types.h \
+    App/map_file_data/map_file_data.h \
+    App/vbf_generator/vbf_generator.h
 
 FORMS += \
         mainwindow.ui

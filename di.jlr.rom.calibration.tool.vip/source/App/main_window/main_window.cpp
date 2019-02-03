@@ -193,64 +193,6 @@ void MainWindow::processErrorCodes(ERROR_CODES_T errorCode)
 }
 
 /*******************************************************************************
- Function Name     : MainWindow::on_ImportXml_pushButton_clicked
-
- Description       : Handle for 'Import XML' push button.
-                     Uploads the JLR XML into the tool from file system.
-
- Parameters        : None
-
- Return Value      : None
-
- Critical Section  : None
- *******************************************************************************/
-void MainWindow::on_ImportXml_pushButton_clicked()
-{
-    uint8_t index = 0;
-
-    /* Show the open XML file window */
-    QString jlrXmlFileStr = QFileDialog::getOpenFileName(this,"Browse for the JLR XML file","C://",("XML Files ( *.xml)"));
-
-    if(jlrXmlFileStr.isEmpty())
-    {
-        QMessageBox::critical(this,"Error","Unable to open JLR XML file");
-        exit(ERR_UNABLE_TO_LOAD_JLR_XML);
-    }
-
-    /* Assign it to the file object and open the file in read mode */
-    QFile jlrXmlFileObj(jlrXmlFileStr);
-
-    if(!jlrXmlFileObj.open(QFile::ReadOnly | QFile::Text))
-    {
-        QMessageBox::critical(this,"Error","Unable to open JLR XML file");
-        exit(ERR_UNABLE_TO_READ_JLR_XML);
-    }
-    else
-    {
-        ui->ImportXml_lineEdit->setText(jlrXmlFileStr);
-
-        if (!xmlParser->read(&jlrXmlFileObj))
-        {
-            QMessageBox::warning(this, tr("XML Parser"),
-                                 tr("Parse error in file %1:\n\n%2")
-                                 .arg(QDir::toNativeSeparators(jlrXmlFileStr),
-                                      jlrXmlFileObj.errorString()));
-        }
-        else
-        {
-            while(index < xmlParser->romDataInfo.variantList.length())
-            {
-                ui->SelectVariant_comboBox->addItem(xmlParser->romDataInfo.variantList.value(index));
-                index++;
-            }
-
-            statusBar()->showMessage(tr("JLR XML file loaded"), 2000);
-        }
-    }
-}
-
-
-/*******************************************************************************
  Function Name     : MainWindow::on_SelectVariant_comboBox_currentIndexChanged
 
  Description       : Handle for 'Select Variant' combo box.
@@ -298,4 +240,100 @@ void MainWindow::on_pushButton_GenerateCfg_clicked()
         qDebug() <<"*********FINISHED**********";
         qDebug()<<"\r\n";
     }
+}
+
+/*******************************************************************************
+ Function Name     : MainWindow::on_ImportXml_pushButton_clicked
+
+ Description       : Handle for 'Import XML' push button.
+                     Uploads the JLR XML into the tool from file system.
+
+ Parameters        : None
+
+ Return Value      : None
+
+ Critical Section  : None
+ *******************************************************************************/
+void MainWindow::on_BrowseXml_PushButton_clicked()
+{
+    uint8_t index = 0;
+
+    /* Show the open XML file window */
+    QString jlrXmlFileStr = QFileDialog::getOpenFileName(this,"Browse for the JLR XML file","C://",("XML Files ( *.xml)"));
+
+    if(jlrXmlFileStr.isEmpty())
+    {
+        QMessageBox::critical(this,"Error","Unable to open JLR XML file");
+        //exit(ERR_UNABLE_TO_LOAD_JLR_XML);
+    }
+
+    /* Assign it to the file object and open the file in read mode */
+    QFile jlrXmlFileObj(jlrXmlFileStr);
+
+    if(!jlrXmlFileObj.open(QFile::ReadOnly | QFile::Text))
+    {
+        QMessageBox::critical(this,"Error","Unable to open JLR XML file");
+        //exit(ERR_UNABLE_TO_READ_JLR_XML);
+    }
+    else
+    {
+        ui->BrowseXml_lineEdit->setText(jlrXmlFileStr);
+
+        if (!xmlParser->read(&jlrXmlFileObj))
+        {
+            QMessageBox::warning(this, tr("XML Parser"),
+                                 tr("Parse error in file %1:\n\n%2")
+                                 .arg(QDir::toNativeSeparators(jlrXmlFileStr),
+                                      jlrXmlFileObj.errorString()));
+        }
+        else
+        {
+            while(index < xmlParser->romDataInfo.variantList.length())
+            {
+                ui->SelectVariant_comboBox->addItem(xmlParser->romDataInfo.variantList.value(index));
+                index++;
+            }
+
+            statusBar()->showMessage(tr("JLR XML file loaded"), 2000);
+        }
+    }
+}
+
+/*******************************************************************************
+ Function Name     : MainWindow::on_pushButton_BrowseMap_clicked
+
+ Description       : Handle for 'Browse MAP File' push button.
+                     Imports the ROM CONST MAP file into the tool.
+
+ Parameters        : None
+
+ Return Value      : None
+
+ Critical Section  : None
+ *******************************************************************************/
+void MainWindow::on_pushButton_BrowseMap_clicked()
+{
+    QString mapDataFileStr = QFileDialog::getOpenFileName(this,"Browse for the ROM constant MAP file","C://",("MAP files ( *.txt)"));
+
+    if(mapDataFileStr.isEmpty())
+    {
+        QMessageBox::critical(this,"Error","Unable to open ROM constant MAP file");
+    }
+
+    /* Assign it to the file object and open the file in read mode */
+    QFile mapDataFileObj(mapDataFileStr);
+
+    if(!mapDataFileObj.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::critical(this,"Error","Unable to open ROM constant MAP file");
+    }
+    else
+    {
+        ui->BrowseMap_LineEdit->setText(mapDataFileStr);
+
+        mapFileData->importMapFileData(mapDataFileObj);
+
+        qDebug()<<"Successfully imported the MAP file contents to internal data structure";
+    }
+
 }

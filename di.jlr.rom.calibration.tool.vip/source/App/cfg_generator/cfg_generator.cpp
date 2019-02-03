@@ -552,90 +552,89 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
 {
     ERROR_CODES_T errorCode = ERR_OK;
     MIN_MAX_INPUT_SCALING minMaxInputScaling;
+    QFile cfgFile(cfgFileName);
 
-    QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
-
-    for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
-    {
-        updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
-
-        QFile cfgFile(cfgFileName);
-
-        if(!cfgFile.open(QFile::ReadWrite | QFile::Text))
-        {
-            errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
-        }
-        else
-        {
-            ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
-            QTextStream cfgFileStream(&cfgFile);
-            QString cfgFileContents = cfgFileStream.readAll();
-            findMinMaxOfInputScalingVipConstTable(&vipConstTableValueIndex,&minMaxInputScaling);
-
-            /* Update constant name in CFG file */
-            cfgFileContents.replace(QString("@CONST_NAME "),vipConstTableValueIndex.name);
-
-            /* Update MIN & MAX values of input scaling in first raw of 2D table */
-            cfgFileContents.replace(QString("@MIN"),QString::number(minMaxInputScaling.minValue));
-            cfgFileContents.replace(QString("@MAX"),QString::number(minMaxInputScaling.maxValue));
-
-           for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
-           {
-               if(value.variant == selectedVariant)
-               {
-                    qDebug()<<value.variant<<" : "<<value.index<<" : "<<value.inputValue<<" : "<<value.outputValue;
-               }
-
-           }
-
-            cfgFile.seek(0);
-            cfgFile.write(cfgFileContents.toUtf8());
-
-            cfgFile.flush();
-            cfgFile.close();
-        }
-
-    }
-
-#if 0
-	if (!(cfgFile.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append)))
+    if(!cfgFile.open(QFile::ReadWrite | QFile::Text | QFile::Append))
     {
         errorCode = ERR_FAILED_TO_OPEN_VARIANT_CFG_FILE;
     }
     else
     {
+        QList<ROM_DATA_VIP_CONST_TABLES>::const_iterator listIter;
+
         for(listIter = vipConstTable.begin();listIter != vipConstTable.end();++listIter)
         {
-            updateVipConstTableCfgTemplateToCfgFile(cfgFileName);
-        	ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
-            qDebug()<<"Name - "<<vipConstTableValueIndex.name;
+            ROM_DATA_VIP_CONST_TABLES vipConstTableValueIndex = *listIter;
+            QTextStream out(&cfgFile);
+            findMinMaxOfInputScalingVipConstTable(&vipConstTableValueIndex,&minMaxInputScaling);
 
-//            qDebug()<<"Input Scaling Min value - "<<vipConstTableValueIndex.InputScaling.minValue;
-//            qDebug()<<"Input Scaling Max value - "<<vipConstTableValueIndex.InputScaling.maxValue;
-//            qDebug()<<"Input Scaling Resolution - "<<QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',10);
-//            qDebug()<<"Input Scaling Units - "<<vipConstTableValueIndex.InputScaling.units;
-//
-//            qDebug()<<"Output Scaling Min value - "<<vipConstTableValueIndex.OutputScaling.minValue;
-//            qDebug()<<"Output Scaling Max value - "<<vipConstTableValueIndex.OutputScaling.maxValue;
-//            qDebug()<<"Output Scaling Resolution - "<<QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',10);
-//            qDebug()<<"Output Scaling Units - "<<vipConstTableValueIndex.OutputScaling.units;
-//
-//            for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
-//            {
-//                qDebug()<<value.variant<<" : "<<value.index<<" : "<<value.inputValue<<" : "<<value.outputValue;
-//            }
+            QString cfgWriteLine = ("#define " + vipConstTableValueIndex.name + +"{" + "\r\n"+\
+                                    "    {" + QString::number(minMaxInputScaling.minValue) + "," +\
+                                    QString::number(minMaxInputScaling.maxValue) + "},\r\n");
+            out<<cfgWriteLine;
+            cfgWriteLine.clear();
+
+            for(const VIP_CONST_TABLE_DATA & value: vipConstTableValueIndex.TableData)
+            {
+                if(value.variant == selectedVariant)
+                {
+                    //double_t InputScalingResolutionRounded = roundFloat(vipConstTableValueIndex.InputScaling.resolution);
+                    //double_t OutputScalingResolutionRounded = roundFloat(vipConstTableValueIndex.OutputScaling.resolution);
+
+                    QString InputScalingResolutionRounded = QString::number(vipConstTableValueIndex.InputScaling.resolution, 'g',3);
+                    QString OutputScalingResolutionRounded = QString::number(vipConstTableValueIndex.OutputScaling.resolution, 'g',3);
+
+                    int32_t inputValue  = int32_t(value.inputValue.toDouble()/roundFloat(InputScalingResolutionRounded.toFloat()));
+                    int32_t outputValue  = int32_t(value.outputValue.toDouble()/roundFloat(OutputScalingResolutionRounded.toFloat()));
+
+                    QString cfgWriteLine = "    {" + QString::number(inputValue) + "," + QString::number(outputValue) + "},\r\n";
+                    out<<cfgWriteLine;
+                    cfgWriteLine.clear();
+                }
+
+            }
+            out<<"};\r\n";
         }
-
+        cfgFile.flush();
+        cfgFile.close();
     }
-#endif
 
 	 return errorCode;
 }
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateTemplateTextToCfgFile
 
+ Description       : Updates the Visteon header file template to CFG files.
+
+ Parameters        : QString const& fileName
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
+double_t roundFloat(double_t var)
+{
+    // 37.66666 * 100 =3766.66
+    // 3766.66 + .5 =37.6716    for rounding off value
+    // then type cast to int so value is 3766
+    // then divided by 100 so the value converted into 37.66
+    double_t value = (int32_t)(var * 1000 + .5);
+    return (double_t)value / 1000;
+}
+/*******************************************************************************
+ Function Name     : CfgGenerator::updateTemplateTextToCfgFile
+
+ Description       : Updates the Visteon header file template to CFG files.
+
+ Parameters        : QString const& fileName
+
+ Return Value      : Error Code
+
+ Critical Section  : None
+ *******************************************************************************/
 void CfgGenerator::findMinMaxOfInputScalingVipConstTable(ROM_DATA_VIP_CONST_TABLES* vipConstTableValue,\
                                                                   MIN_MAX_INPUT_SCALING* minMaxValues)
 {
-    ERROR_CODES_T errorCode = ERR_OK;
     QList<double_t> inputValues;
 
     for(const VIP_CONST_TABLE_DATA & value: vipConstTableValue->TableData)
@@ -645,7 +644,7 @@ void CfgGenerator::findMinMaxOfInputScalingVipConstTable(ROM_DATA_VIP_CONST_TABL
             inputValues.append(value.inputValue.toDouble());
         }
     }
-    float_t resolutionRounded = (roundf((vipConstTableValue->InputScaling.resolution)*100000)/100000);
+    double_t resolutionRounded = roundFloat(vipConstTableValue->InputScaling.resolution);
     minMaxValues->minValue = int32_t((*std::min_element(inputValues.begin(), inputValues.end()))/resolutionRounded);
     minMaxValues->maxValue = int32_t((*std::max_element(inputValues.begin(), inputValues.end()))/resolutionRounded);
 }

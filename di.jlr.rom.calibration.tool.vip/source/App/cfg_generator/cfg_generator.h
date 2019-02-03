@@ -67,4 +67,6 @@ public:
     		                            QList<ROM_DATA_VIP_CONST_TABLES> const& vipConstTable);
 };
 
+double_t roundFloat(double_t var);
+
 #endif // CFG_GENERATOR_H

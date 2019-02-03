@@ -1244,7 +1244,7 @@ ERROR_CODES_T JlrXmlParser::updateInputScalingFactorsVipConstTable(QXmlStreamRea
                     }
                     else if(xml.name() == "Resolution")
                     {
-                        vipConstTable->InputScaling.resolution = xml.readElementText().toFloat();
+                        vipConstTable->InputScaling.resolution = xml.readElementText().toDouble();
                     }
                     else if(xml.name() == "Units")
                     {
@@ -1305,7 +1305,7 @@ ERROR_CODES_T JlrXmlParser::updateOutputScalingFactorsVipConstTable(QXmlStreamRe
                     }
                     else if(xml.name() == "Resolution")
                     {
-                        vipConstTable->OutputScaling.resolution = xml.readElementText().toFloat();
+                        vipConstTable->OutputScaling.resolution = xml.readElementText().toDouble();
                     }
                     else if(xml.name() == "Units")
                     {
