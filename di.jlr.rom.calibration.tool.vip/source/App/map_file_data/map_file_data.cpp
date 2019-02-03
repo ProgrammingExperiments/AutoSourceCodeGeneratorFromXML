@@ -65,27 +65,26 @@ using namespace std;
 
  Critical Section  : None
  *******************************************************************************/
-ERROR_CODES_T MapDataContents::importMapFileData(QFile & mapFile)
+ERROR_CODES_T MapDataContents::importMapFileData(QString const& cfgFileName)
 {
     ERROR_CODES_T errorCode = ERR_OK;
 
-    QString mapDataString;
+    QFile mapDataFileObj(cfgFileName);
 
-    QTextStream in(&mapFile);
-
-    while (!in.atEnd())
+    if(!mapDataFileObj.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-       QString line = in.readLine();
-
-       if(line.contains("0x"))
-       {
-           mapDataString.append(line + "\n");
-       }
+        //QMessageBox::critical(this,"Error","Unable to open ROM constant MAP file");
     }
+    else
+    {
+        QTextStream in(&mapDataFileObj);
 
-    mapFile.resize(0);
-    in << mapDataString;
-    mapFile.close();
+        while (!in.atEnd())
+        {
+           QString line = in.readLine();
+           processMapDataFileByLine(line);
+        }
+    }
 
     return errorCode;
 }
@@ -104,40 +103,65 @@ ERROR_CODES_T MapDataContents::importMapFileData(QFile & mapFile)
 ERROR_CODES_T MapDataContents::processMapDataFileByLine(QString & line)
 {
     ERROR_CODES_T errorCode = ERR_OK;
-    QString startString("ROM items");
-    static bool bStartStringFound = false;
-    static uint32_t lineIndex = 0;
     MAP_DATA_FILE mapDataImported;
 
-    if (line.contains(startString, Qt::CaseSensitive))
+    if (line.contains("0x", Qt::CaseSensitive))
     {
-        bStartStringFound = true;
-        lineIndex = 4;
+        line.replace(QRegExp("[\\s\\n]+"), " ");
+
+        QRegExp rx("[, ]");// match a comma or a space
+        QStringList list = line.split(rx, QString::SkipEmptyParts);
+
+        qDebug()<<"Constant Name - "<<list.at(0);
+        qDebug()<<"Constant Address - "<<list.at(1);
+        qDebug()<<"Constant Length - "<<list.at(2);
+
+        mapDataImported.constName    = list.at(0);
+        mapDataImported.constAddress = list.at(1);
+        mapDataImported.constSize    = list.at(2);
+        qDebug()<<"\r\n";
     }
     else
     {
-        if(bStartStringFound != false)
+        qDebug()<<"Address line not found.";
+    }
+
+    return errorCode;
+}
+
+/*******************************************************************************
+ Function Name     : xxxx
+
+ Description       : xxxx
+
+ Parameters        : None
+
+ Return Value      : None
+
+ Critical Section  : None
+ *******************************************************************************/
+ERROR_CODES_T MapDataContents::removeEmptyLinesInMapFile(QFile &mapFile)
+{
+    ERROR_CODES_T errorCode = ERR_OK;
+
+    QString mapDataString;
+
+    QTextStream in(&mapFile);
+
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+
+        /* If the line contains address, do not remove it. */
+        if(line.contains("0x"))
         {
-            lineIndex++;
-
-            if(lineIndex >= 6)
-            {
-                line.replace(QRegExp("[\\s\\n]+"), " ");
-
-                QRegExp rx("[, ]");// match a comma or a space
-                QStringList list = line.split(rx, QString::SkipEmptyParts);
-
-                qDebug()<<"Constant Name - "<<list.at(0);
-                qDebug()<<"Constant Address - "<<list.at(1);
-                qDebug()<<"Constant Length - "<<list.at(2);
-
-                mapDataImported.constName    = list.at(0);
-                mapDataImported.constAddress = list.at(1);
-                mapDataImported.constSize    = list.at(2);
-                qDebug()<<"\r\n";
-            }
+           mapDataString.append(line + "\n");
         }
     }
+
+    mapFile.resize(0);
+    in << mapDataString;
+    mapFile.close();
 
     return errorCode;
 }

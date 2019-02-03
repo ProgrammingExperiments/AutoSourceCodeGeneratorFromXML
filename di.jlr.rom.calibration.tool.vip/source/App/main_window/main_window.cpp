@@ -331,7 +331,9 @@ void MainWindow::on_pushButton_BrowseMap_clicked()
     {
         ui->BrowseMap_LineEdit->setText(mapDataFileStr);
 
-        mapFileData->importMapFileData(mapDataFileObj);
+        mapFileData->removeEmptyLinesInMapFile(mapDataFileObj);
+
+        mapFileData->importMapFileData(mapDataFileStr);
 
         qDebug()<<"Successfully imported the MAP file contents to internal data structure";
     }

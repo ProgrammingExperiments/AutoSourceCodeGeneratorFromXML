@@ -57,7 +57,8 @@ class MapDataContents
 public:
     /* Member functions */
     MapDataContents(void);
-    ERROR_CODES_T importMapFileData(QFile & mapFile);
+    ERROR_CODES_T importMapFileData(QString const& cfgFileName);
+    ERROR_CODES_T removeEmptyLinesInMapFile(QFile & mapFile);
     ERROR_CODES_T processMapDataFileByLine(QString & line);
 
     /* Data Structures */
