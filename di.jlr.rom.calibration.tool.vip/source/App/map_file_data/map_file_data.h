@@ -60,7 +60,7 @@ public:
     ERROR_CODES_T importMapFileData(QString const& cfgFileName);
     ERROR_CODES_T removeEmptyLinesInMapFile(QFile & mapFile);
     ERROR_CODES_T processMapDataFileByLine(QString & line);
-    void printMapDataContents(void);
+    ERROR_CODES_T printMapDataContents(void);
 
     /* Data Structures */
     QList<MAP_DATA_FILE> romConstMapFileDataList;

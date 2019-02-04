@@ -337,9 +337,45 @@ void MainWindow::on_pushButton_BrowseMap_clicked()
 
         mapFileData->importMapFileData(mapDataFileStr);
 
-        //mapFileData->printMapDataContents();
+        mapFileData->printMapDataContents();
 
         qDebug()<<"Successfully imported the MAP file contents to internal data structure";
     }
 
+}
+
+/*******************************************************************************
+ Function Name     : MainWindow::on_pushButton_BrowseMap_clicked
+
+ Description       : Handle for 'Browse MAP File' push button.
+                     Imports the ROM CONST MAP file into the tool.
+
+ Parameters        : None
+
+ Return Value      : None
+
+ Critical Section  : None
+ *******************************************************************************/
+void MainWindow::on_pushButton_BrowseRomData_clicked()
+{
+    QString romDataFileStr = QFileDialog::getOpenFileName(this,"Browse for the ROM constant data file","C://",("ROM CONST DATA files ( *.ROMBLOCK)"));
+
+    if(romDataFileStr.isEmpty())
+    {
+        QMessageBox::critical(this,"Error","Unable to open ROM constant data file");
+    }
+
+    /* Assign it to the file object and open the file in read mode */
+    QFile romDataFileObj(romDataFileStr);
+
+    if(!romDataFileObj.open(QIODevice::ReadWrite | QIODevice::Text))
+    {
+        QMessageBox::critical(this,"Error","Unable to open ROM constant data file");
+    }
+    else
+    {
+        ui->BrowseRomData_LineEdit->setText(romDataFileStr);
+
+        qDebug()<<"Successfully imported the ROM data file";
+    }
 }

@@ -270,6 +270,7 @@ ERROR_CODES_T JlrXmlParser::processVipConstantEnumTag(QXmlStreamReader &xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("VIP_ConstantEnums"));
     ERROR_CODES_T errorCode = ERR_OK;
+    romDataConstVipEnumList.clear();
 
     while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
             xml.name() == "VIP_ConstantEnums") && !(xml.hasError()))
@@ -635,6 +636,7 @@ ERROR_CODES_T JlrXmlParser::processVipConstantValueTag(QXmlStreamReader &xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("VIP_ConstantValues"));
     ERROR_CODES_T errorCode = ERR_OK;
+    romDataConstVipValuesList.clear();
 
     while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
             xml.name() == "VIP_ConstantValues") && !(xml.hasError()))
@@ -683,6 +685,7 @@ ERROR_CODES_T JlrXmlParser::processGipConstantValueTag(QXmlStreamReader &xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("GIP_ConstantValues"));
     ERROR_CODES_T errorCode = ERR_OK;
+    romDataConstGipValuesList.clear();
 
     while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
             xml.name() == "GIP_ConstantValues") && !(xml.hasError()))
@@ -731,6 +734,7 @@ ERROR_CODES_T JlrXmlParser::processVipConstantTablesTag(QXmlStreamReader &xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("VIP_ConstantTables"));
     ERROR_CODES_T errorCode = ERR_OK;
+    romDataConstVipTablesList.clear();
 
     while(!(xml.tokenType() == QXmlStreamReader::EndElement &&
             xml.name() == "VIP_ConstantTables") && !(xml.hasError()))

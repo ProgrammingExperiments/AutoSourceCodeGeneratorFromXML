@@ -68,6 +68,8 @@ private slots:
 
     void on_pushButton_BrowseMap_clicked();
 
+    void on_pushButton_BrowseRomData_clicked();
+
 private:
     Ui::MainWindow *ui;
     class JlrXmlParser *xmlParser;

@@ -36,6 +36,7 @@
  *                           Qt Specific Include Files                        *
  ******************************************************************************/
 #include <QFile>
+#include <QDir>
 #include <QXmlStreamReader>
 #include <QDebug>
 #include <QStringList>
@@ -92,6 +93,8 @@ ERROR_CODES_T MapDataContents::importMapFileData(QString const& cfgFileName)
     }
     else
     {
+        romConstMapFileDataList.clear();
+
         QTextStream in(&mapDataFileObj);
 
         while (!in.atEnd())
@@ -130,13 +133,6 @@ ERROR_CODES_T MapDataContents::processMapDataFileByLine(QString & line)
         mapDataImported.constName    = list.at(0);
         mapDataImported.constAddress = list.at(1);
         mapDataImported.constSize   = list.at(2);
-
-
-//        qDebug()<<"Constant Name - "<<mapDataImported.constName;
-//        qDebug()<<"Constant Address - "<<mapDataImported.constAddress;
-//        qDebug()<<"Constant Length - "<<mapDataImported.constSize ;
-
-//        qDebug()<<"\r\n";
 
         /* Update the MAP data to MAP data internal structure */
         romConstMapFileDataList.append(mapDataImported);
@@ -193,17 +189,83 @@ ERROR_CODES_T MapDataContents::removeEmptyLinesInMapFile(QFile &mapFile)
 
  Critical Section  : None
  *******************************************************************************/
-void MapDataContents::printMapDataContents()
+ERROR_CODES_T MapDataContents::printMapDataContents(void)
 {
-    QList<MAP_DATA_FILE>::iterator listIter;
+    ERROR_CODES_T errorCode;
+    QDir mapOutputDir;
+    QFile mapDataOutputFile;
+    QString headerString = "********************************************************************";
+    QString mapDataOutputFilePath = "../output/rom_map_data/";
+    QString mapDataOutputFileName = mapDataOutputFilePath + "rom_map_extracted.txt";
+    mapDataOutputFile.setFileName(mapDataOutputFileName);
 
-    for(listIter = romConstMapFileDataList.begin();listIter != romConstMapFileDataList.end();++listIter)
+    if(!mapOutputDir.exists(mapDataOutputFilePath))
     {
-        MAP_DATA_FILE romMapDataIndex = *listIter;
+        if(false != mapOutputDir.mkpath(mapDataOutputFilePath))
+        {
+            if (!(mapDataOutputFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)))
+            {
+                errorCode = ERR_FAILED_TO_OPEN_MAP_DATA_OP_FILE;
+            }
+            else
+            {
+                QTextStream out(&mapDataOutputFile);
 
-        qDebug()<<"Constant Name - "<<romMapDataIndex.constName;
-        qDebug()<<"Constant Address - "<<romMapDataIndex.constAddress;
-        qDebug()<<"Constant Length - "<<romMapDataIndex.constSize;
-        qDebug()<<"\r\n";
+                QList<MAP_DATA_FILE>::iterator listIter;
+
+                for(listIter = romConstMapFileDataList.begin();listIter != romConstMapFileDataList.end();++listIter)
+                {
+                    MAP_DATA_FILE romMapDataIndex = *listIter;
+
+                    QString mapDataLine = headerString + "\r\n" +\
+                                          "Constant Name - " + romMapDataIndex.constName + "\r\n" +\
+                                          "Constant Address - " + romMapDataIndex.constAddress + "\r\n" +\
+                                          "Constant Size - " + romMapDataIndex.constSize + "\r\n";
+                    out<<mapDataLine;
+                    mapDataLine.clear();
+                }
+
+                mapDataOutputFile.flush();
+                mapDataOutputFile.close();
+            }
+        }
     }
+    else
+    {
+        mapOutputDir.remove(mapDataOutputFileName);
+        mapOutputDir.rmdir(mapDataOutputFilePath);
+
+
+        if(false != mapOutputDir.mkpath(mapDataOutputFilePath))
+        {
+            if (!(mapDataOutputFile.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)))
+            {
+                errorCode = ERR_FAILED_TO_OPEN_MAP_DATA_OP_FILE;
+            }
+            else
+            {
+                QTextStream out(&mapDataOutputFile);
+
+                QList<MAP_DATA_FILE>::iterator listIter;
+
+                for(listIter = romConstMapFileDataList.begin();listIter != romConstMapFileDataList.end();++listIter)
+                {
+                    MAP_DATA_FILE romMapDataIndex = *listIter;
+
+                    QString mapDataLine = headerString + "\r\n" +\
+                                          "Constant Name - " + romMapDataIndex.constName + "\r\n" +\
+                                          "Constant Address - " + romMapDataIndex.constAddress + "\r\n" +\
+                                          "Constant Size - " + romMapDataIndex.constSize + "\r\n";
+                    out<<mapDataLine;
+                    mapDataLine.clear();
+                }
+                out<<"####################################################################";
+                mapDataOutputFile.flush();
+                mapDataOutputFile.close();
+                out.flush();
+            }
+        }
+    }
+
+    return errorCode;
 }
