@@ -42,6 +42,7 @@
 #include "cfg_generator/cfg_generator.h"
 #include "jlr_xml_parser/jlr_xml_parser.h"
 #include "map_file_data/map_file_data.h"
+#include "vbf_generator/vbf_generator.h"
 
 /*==========================================================================*/
 /*                              Class Definitions                           */
@@ -70,11 +71,14 @@ private slots:
 
     void on_pushButton_BrowseRomData_clicked();
 
+    void on_pushButton_GenerateRomData_clicked();
+
 private:
     Ui::MainWindow *ui;
     class JlrXmlParser *xmlParser;
     class CfgGenerator *cfgGenerator;
     class MapDataContents *mapFileData;
+    class RomBlockDataFile *romBlockBinary;
 };
 
 #endif // MAIN_WINDOW_H

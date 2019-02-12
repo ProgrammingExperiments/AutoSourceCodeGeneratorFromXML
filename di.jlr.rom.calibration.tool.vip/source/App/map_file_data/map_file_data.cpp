@@ -217,10 +217,10 @@ ERROR_CODES_T MapDataContents::printMapDataContents(void)
                 {
                     MAP_DATA_FILE romMapDataIndex = *listIter;
 
-                    QString mapDataLine = headerString + "\r\n" +\
-                                          "Constant Name - " + romMapDataIndex.constName + "\r\n" +\
-                                          "Constant Address - " + romMapDataIndex.constAddress + "\r\n" +\
-                                          "Constant Size - " + romMapDataIndex.constSize + "\r\n";
+                    QString mapDataLine = headerString + "\n" +\
+                                          "Constant Name - " + romMapDataIndex.constName + "\n" +\
+                                          "Constant Address - " + romMapDataIndex.constAddress + "\n" +\
+                                          "Constant Size - " + romMapDataIndex.constSize + "\n";
                     out<<mapDataLine;
                     mapDataLine.clear();
                 }

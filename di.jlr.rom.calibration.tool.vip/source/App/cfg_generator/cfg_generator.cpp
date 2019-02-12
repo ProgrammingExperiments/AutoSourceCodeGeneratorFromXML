@@ -276,7 +276,7 @@ ERROR_CODES_T CfgGenerator::updateRomDataForVipConstEnumsToCfgFile(class JlrXmlP
                 ROM_DATA_VIP_CONST_ENUMS romDataIndex = *listIter;
                 QString cfgWriteLine = "#define ";
                 cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                               + "(" + romDataIndex.variant[selectedVariant]+ ")" + "\r\n";
+                               + "(" + romDataIndex.variant[selectedVariant]+ ")" + "\n";
                 out<<cfgWriteLine;
                 cfgWriteLine.clear();
             }
@@ -341,7 +341,7 @@ ERROR_CODES_T CfgGenerator::updateRomDataForVipConstValuesToCfgFile(class JlrXml
 
                         QString cfgWriteLine = "#define ";
                         cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\n";
                         out<<cfgWriteLine;
                         cfgWriteLine.clear();
 
@@ -360,7 +360,7 @@ ERROR_CODES_T CfgGenerator::updateRomDataForVipConstValuesToCfgFile(class JlrXml
 
                             QString cfgWriteLine = "#define ";
                             cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                                           + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                                           + "(" + QString::number(variantValueDerived)+ ")" + "\n";
                             out<<cfgWriteLine;
                             cfgWriteLine.clear();
                         }
@@ -381,7 +381,7 @@ ERROR_CODES_T CfgGenerator::updateRomDataForVipConstValuesToCfgFile(class JlrXml
 
                         QString cfgWriteLine = "#define ";
                         cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\n";
                         out<<cfgWriteLine;
                         cfgWriteLine.clear();
                     }
@@ -448,7 +448,7 @@ ERROR_CODES_T CfgGenerator::updateRomDataForGipConstValuesToCfgFile(class JlrXml
 
                         QString cfgWriteLine = "#define ";
                         cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\n";
                         out<<cfgWriteLine;
                         cfgWriteLine.clear();
 
@@ -467,7 +467,7 @@ ERROR_CODES_T CfgGenerator::updateRomDataForGipConstValuesToCfgFile(class JlrXml
 
                             QString cfgWriteLine = "#define ";
                             cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                                           + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                                           + "(" + QString::number(variantValueDerived)+ ")" + "\n";
                             out<<cfgWriteLine;
                             cfgWriteLine.clear();
                         }
@@ -488,7 +488,7 @@ ERROR_CODES_T CfgGenerator::updateRomDataForGipConstValuesToCfgFile(class JlrXml
 
                         QString cfgWriteLine = "#define ";
                         cfgWriteLine = cfgWriteLine + romDataIndex.name + "_VALUE  " + \
-                                       + "(" + QString::number(variantValueDerived)+ ")" + "\r\n";
+                                       + "(" + QString::number(variantValueDerived)+ ")" + "\n";
                         out<<cfgWriteLine;
                         cfgWriteLine.clear();
                     }
@@ -570,7 +570,7 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
 
             QString cfgWriteLine = ("#define " + vipConstTableValueIndex.name + +"{" + "\r\n"+\
                                     "    {" + QString::number(minMaxInputScaling.minValue) + "," +\
-                                    QString::number(minMaxInputScaling.maxValue) + "},\r\n");
+                                    QString::number(minMaxInputScaling.maxValue) + "},\n");
             out<<cfgWriteLine;
             cfgWriteLine.clear();
 
@@ -587,7 +587,7 @@ ERROR_CODES_T CfgGenerator::populateVipConstTableDataInCfgFile(QString const& cf
                     int32_t inputValue  = int32_t(value.inputValue.toDouble()/roundFloat(InputScalingResolutionRounded.toFloat()));
                     int32_t outputValue  = int32_t(value.outputValue.toDouble()/roundFloat(OutputScalingResolutionRounded.toFloat()));
 
-                    QString cfgWriteLine = "    {" + QString::number(inputValue) + "," + QString::number(outputValue) + "},\r\n";
+                    QString cfgWriteLine = "    {" + QString::number(inputValue) + "," + QString::number(outputValue) + "},\n";
                     out<<cfgWriteLine;
                     cfgWriteLine.clear();
                 }

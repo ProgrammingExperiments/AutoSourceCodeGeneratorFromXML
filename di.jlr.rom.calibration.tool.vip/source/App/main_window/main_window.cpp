@@ -65,9 +65,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    xmlParser    = new JlrXmlParser;
-    cfgGenerator = new CfgGenerator;
-    mapFileData  = new MapDataContents;
+    xmlParser      = new JlrXmlParser;
+    cfgGenerator   = new CfgGenerator;
+    mapFileData    = new MapDataContents;
+    romBlockBinary = new RomBlockDataFile;
 }
 
 /*******************************************************************************
@@ -86,6 +87,7 @@ MainWindow::~MainWindow()
     delete xmlParser;
     delete cfgGenerator;
     delete mapFileData;
+    delete romBlockBinary;
     delete ui;
 }
 
@@ -345,10 +347,10 @@ void MainWindow::on_pushButton_BrowseMap_clicked()
 }
 
 /*******************************************************************************
- Function Name     : MainWindow::on_pushButton_BrowseMap_clicked
+ Function Name     : MainWindow::on_pushButton_BrowseRomData_clicked
 
- Description       : Handle for 'Browse MAP File' push button.
-                     Imports the ROM CONST MAP file into the tool.
+ Description       : Handle for 'Browse ROM data File' push button.
+                     Imports the ROM CONST DATA file into the tool.
 
  Parameters        : None
 
@@ -375,7 +377,26 @@ void MainWindow::on_pushButton_BrowseRomData_clicked()
     else
     {
         ui->BrowseRomData_LineEdit->setText(romDataFileStr);
+        romBlockBinary->importRomBlockDataFile(romDataFileStr);
+        //romBlockBinary->printRomBlockDataContents(romBlockBinary->romBlockSrecordList);
 
-        qDebug()<<"Successfully imported the ROM data file";
+        //qDebug()<<"Successfully imported the ROM data file";
     }
+}
+
+/*******************************************************************************
+ Function Name     : MainWindow::on_pushButton_GenerateRomData_clicked
+
+ Description       : Handle for 'Generate ROM data File' push button.
+                     Generates the modified ROM data file.
+
+ Parameters        : None
+
+ Return Value      : None
+
+ Critical Section  : None
+ *******************************************************************************/
+void MainWindow::on_pushButton_GenerateRomData_clicked()
+{
+    romBlockBinary->createRomBlockDataBinaryFile();
 }
